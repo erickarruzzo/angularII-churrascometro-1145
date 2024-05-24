@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { PrecoFormularioComponent } from '../../components/preco-formulario/preco-formulario.component';
+import { PrecoFormularioComponent } from '../../shared/components/preco-formulario/preco-formulario.component';
 import { ScrollService } from '../../shared/services/scroll.service';
 import { RouterLink } from '@angular/router';
 
@@ -16,5 +16,5 @@ export class HomeComponent {
 
   // #scrollService = inject(ScrollService);
 
-  constructor(private scrollService: ScrollService) { }
+  constructor() { }
 }

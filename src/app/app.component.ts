@@ -2,7 +2,7 @@ import { Component, LOCALE_ID } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import pt from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
-import { HeaderComponent } from './components/header/header.component';
+import { HeaderComponent } from './shared/components/header/header.component';
 
 registerLocaleData(pt);
 

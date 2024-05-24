@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ChurrascometroService } from '../../shared/services/churrascometro.service';
+import { ChurrascometroService } from '../../services/churrascometro.service';
 import { map } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';

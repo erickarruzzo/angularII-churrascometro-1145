@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PrecoFormularioComponent } from '../../components/preco-formulario/preco-formulario.component';
+import { PrecoFormularioComponent } from '../../shared/components/preco-formulario/preco-formulario.component';
 import { ScrollService } from '../../shared/services/scroll.service';
 
 @Component({
