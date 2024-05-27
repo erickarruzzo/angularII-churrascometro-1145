@@ -10,6 +10,7 @@ import { ScrollService } from '../../shared/services/scroll.service';
   styleUrl: './criacao-churrasco.component.scss'
 })
 export class CriacaoChurrascoComponent {
+  condition: boolean = true;
 
   constructor(private scrollService: ScrollService) { }
   

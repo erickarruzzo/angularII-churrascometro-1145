@@ -1,20 +1,4 @@
 <section id="form-container" class="container mx-auto">
-  <!-- template driven -->
-
-  <!-- <form (ngSubmit)="onSubmit()">
-    <div class="flex flex-col mx-auto m-2 w-80">
-      <mat-form-field class="block">
-        <mat-label>Nome:</mat-label>
-
-        <input matInput name="nome" type="text" [(ngModel)]="nome" placeholder="Digite seu nome" required>
-
-        <mat-error>Nome é obrigatório</mat-error>
-      </mat-form-field>
-
-      <button mat-raised-button class="mt-2" type="submit" [disabled]="!nome">Enviar</button>
-    </div>
-  </form> -->
-
   <!-- reactive forms -->
   <mat-stepper
     orientation="vertical"
@@ -22,6 +6,36 @@
     #stepper
     class="w-[640px] mx-auto"
   >
+    <mat-step [stepControl]="formTipoChurrasco">
+      <form [formGroup]="formTipoChurrasco" class="flex flex-col">
+        <ng-template matStepLabel>Qual o tipo de churrasco?</ng-template>
+
+        <mat-radio-group formControlName="tipoChurrasco" class="mt-2">
+          @for (tipoChurrasco of tiposChurrasco; track tipoChurrasco) {
+          <mat-radio-button class="flex flex-col" [value]="tipoChurrasco">
+            {{ tipoChurrasco }}
+          </mat-radio-button>
+          }
+        </mat-radio-group>
+
+        <mat-error class="mt-2" *ngIf="!formTipoChurrasco.valid">
+          Pelo menos um tipo é obrigatório
+        </mat-error>
+
+        <div class="flex justify-end mt-2">
+          <button
+            mat-flat-button
+            color="primary"
+            matStepperNext
+            [disabled]="!formTipoChurrasco.valid"
+            (click)="carregaTipoChurrasco()"
+          >
+            Avançar
+          </button>
+        </div>
+      </form>
+    </mat-step>
+
     <mat-step [stepControl]="formPessoas">
       <form [formGroup]="formPessoas" class="flex flex-col">
         <ng-template matStepLabel>Quantas pessoas?</ng-template>
@@ -82,11 +96,29 @@
       <form [formGroup]="formCarnes" class="flex flex-col">
         <ng-template matStepLabel>Quais carnes?</ng-template>
 
-        <ng-container *ngFor="let carne of carnesLista">
-          <mat-checkbox [formControlName]="carne.value">{{
-            carne.label
-          }}</mat-checkbox>
-        </ng-container>
+        @for (carne of carnesLista; track $index) {
+          @switch(tipoChurrascoSelecionado) { 
+            @case("Normal") {
+              <mat-checkbox [formControlName]="carne.value">
+                {{ carne.label }}
+              </mat-checkbox>
+            }
+            @case("Vegetariano") {
+              @if (carne.tipo === "Vegetariano" || carne.tipo === "Vegano") {
+                <mat-checkbox [formControlName]="carne.value">
+                  {{ carne.label }}
+                </mat-checkbox>   
+              }
+            }
+            @case("Vegano") {
+              @if (carne.tipo === "Vegano") {
+                <mat-checkbox [formControlName]="carne.value">
+                  {{ carne.label }}
+                </mat-checkbox>   
+              }
+            }
+          }
+        }
 
         <div class="flex justify-end mt-2">
           <button mat-flat-button color="primary" matStepperNext>
@@ -117,10 +149,6 @@
 </section>
 
 <section class="container mx-auto mt-4">
-  <div *ngIf="exibirLoading" class="flex justify-center">
-    <mat-spinner color="accent" diameter="70"></mat-spinner>
-  </div>
-
   <div *ngIf="exibirResultados">
     <h1 class="text-2xl font-bold mb-4">Valores para meu Churrasco</h1>
 
@@ -157,32 +185,101 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td class="py-2 px-4 border-b text-left">Picanha</td>
-          <td class="py-2 px-4 border-b text-left">
-            {{ valor_total_picanha | currency : "BRL" }}
-          </td>
-        </tr>
-        <tr>
-          <td class="py-2 px-4 border-b text-left">Costela</td>
-          <td class="py-2 px-4 border-b text-left">
-            {{ valor_total_costela | currency : "BRL" }}
-          </td>
-        </tr>
+        @if (valor_total_picanha() > 0) {
+          <tr>
+            <td class="py-2 px-4 border-b text-left">Picanha</td>
+            <td class="py-2 px-4 border-b text-left">
+              {{ valor_total_picanha() | currency : "BRL" }}
+            </td>
+          </tr>  
+        }
+        @if (valor_total_costela() > 0) {
+          <tr>
+            <td class="py-2 px-4 border-b text-left">Costela</td>
+            <td class="py-2 px-4 border-b text-left">
+              {{ valor_total_costela() | currency : "BRL" }}
+            </td>
+          </tr>
+        }
+        @if (valor_total_linguica() > 0) {
+          <tr>
+            <td class="py-2 px-4 border-b text-left">Linguiça</td>
+            <td class="py-2 px-4 border-b text-left">
+              {{ valor_total_linguica() | currency : "BRL" }}
+            </td>
+          </tr>
+        }
+        @if (valor_total_frango() > 0) {
+          <tr>
+            <td class="py-2 px-4 border-b text-left">Frango</td>
+            <td class="py-2 px-4 border-b text-left">
+              {{ valor_total_frango() | currency : "BRL" }}
+            </td>
+          </tr>
+        }
+        @if (valor_total_queijo() > 0) {
+          <tr>
+            <td class="py-2 px-4 border-b text-left">Queijo</td>
+            <td class="py-2 px-4 border-b text-left">
+              {{ valor_total_queijo() | currency : "BRL" }}
+            </td>
+          </tr>
+        }
+        @if (valor_total_abacaxi() > 0) {
+          <tr>
+            <td class="py-2 px-4 border-b text-left">Abacaxi</td>
+            <td class="py-2 px-4 border-b text-left">
+              {{ valor_total_abacaxi() | currency : "BRL" }}
+            </td>
+          </tr>
+        }
       </tbody>
     </table>
 
-    <!-- <p>
-      valor total picanha: {{valor_total_picanha | currency: 'BRL'}}
-    </p>
-
-    <p>
-      valor total cerveja: {{valor_total_cerveja | currency: 'BRL'}}
-    </p>
-
-    <p>
-      valor total: {{valor_total | currency: 'BRL'}}
-    </p> -->
+    <h2 class="text-xl font-bold m-4">Bebidas</h2>
+    <table class="min-w-full bg-white table-fixed">
+      <thead>
+        <tr>
+          <th class="py-2 px-4 border-b text-left">Descrição</th>
+          <th class="py-2 px-4 border-b text-left">Valor Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (valor_total_cerveja() > 0) {
+          <tr>
+            <td class="py-2 px-4 border-b text-left">Cerveja</td>
+            <td class="py-2 px-4 border-b text-left">
+              {{ valor_total_cerveja() | currency : "BRL" }}
+            </td>
+          </tr>  
+        }
+        @if (valor_total_refrigerante() > 0) {
+          <tr>
+            <td class="py-2 px-4 border-b text-left">Refrigerante</td>
+            <td class="py-2 px-4 border-b text-left">
+              {{ valor_total_refrigerante() | currency : "BRL" }}
+            </td>
+          </tr>
+        }
+        @if (valor_total_suco() > 0) {
+          <tr>
+            <td class="py-2 px-4 border-b text-left">Suco</td>
+            <td class="py-2 px-4 border-b text-left">
+              {{ valor_total_suco() | currency : "BRL" }}
+            </td>
+          </tr>
+        }
+        @if (valor_total_agua() > 0) {
+          <tr>
+            <td class="py-2 px-4 border-b text-left">Água</td>
+            <td class="py-2 px-4 border-b text-left">
+              {{ valor_total_agua() | currency : "BRL" }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    <h3 class="flex justify-end text-xl font-bold m-4">Valor Total: {{ valor_total() | currency : "BRL" }}</h3>
   </div>
 </section>
 
@@ -219,6 +316,20 @@
         <p>Preço por kg: {{ preco_frango | currency : "BRL" }}</p>
         <p>Consumo médio por adulto (g): {{ consumo_adulto_frango }}</p>
         <p>Consumo médio por criança (g): {{ consumo_crianca_frango }}</p>
+      </div>
+
+      <div class="bg-white shadow-md rounded p-4 mb-4">
+        <h2 class="text-xl font-semibold mb-2">Queijo</h2>
+        <p>Preço por kg: {{ preco_queijo | currency : "BRL" }}</p>
+        <p>Consumo médio por adulto (g): {{ consumo_adulto_queijo }}</p>
+        <p>Consumo médio por criança (g): {{ consumo_crianca_queijo }}</p>
+      </div>
+
+      <div class="bg-white shadow-md rounded p-4 mb-4">
+        <h2 class="text-xl font-semibold mb-2">Abacaxi</h2>
+        <p>Preço por kg: {{ preco_abacaxi | currency : "BRL" }}</p>
+        <p>Consumo médio por adulto (g): {{ consumo_adulto_abacaxi }}</p>
+        <p>Consumo médio por criança (g): {{ consumo_crianca_abacaxi }}</p>
       </div>
     </div>
 
