@@ -9,7 +9,14 @@
       </tr>
     </thead>
     <tbody>
-      @for (item of items; track $index) {
+      @for (item of items; track item;
+      let i = $index;
+      let c = $count;
+      let f = $first;
+      let l = $last;
+      let o = $odd;
+      let e = $even
+      ) {
       <tr>
         <td>{{ item.id }}</td>
         <td>{{ item.nome }}</td>

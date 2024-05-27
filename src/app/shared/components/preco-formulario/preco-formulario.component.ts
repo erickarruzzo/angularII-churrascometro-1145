@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, signal } from '@angular/core';
+import { Component, OnInit, computed, effect, signal } from '@angular/core';
 import { ChurrascometroService } from '../../services/churrascometro.service';
 import { map } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -162,6 +162,10 @@ export class PrecoFormularioComponent implements OnInit {
       refrigerante: new FormControl(null),
       agua: new FormControl(null),
       suco: new FormControl(null),
+    });
+
+    effect(() => {
+      console.log(this.valor_total());
     });
   }
 
