@@ -165,8 +165,10 @@ export class PrecoFormularioComponent implements OnInit {
     });
 
     effect(() => {
-      console.log(this.valor_total());
-    });
+      if (this.valor_total() > 0) {
+        this.exibirResultados = true;
+      }
+    })
   }
 
   ngOnInit(): void {
@@ -388,8 +390,6 @@ export class PrecoFormularioComponent implements OnInit {
           )
         );
       }
-
-      this.exibirResultados = true;
     }
   }
 
