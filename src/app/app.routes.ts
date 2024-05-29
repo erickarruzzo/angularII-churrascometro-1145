@@ -4,6 +4,7 @@ import { CriacaoChurrascoComponent } from './pages/criacao-churrasco/criacao-chu
 import { ListaChurrascoComponent } from './pages/lista-churrasco/lista-churrasco.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { DetalheChurrascoComponent } from './pages/detalhe-churrasco/detalhe-churrasco.component';
+import { CriacaoProdutoComponent } from './pages/criacao-produto/criacao-produto.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent, title: 'Churrascometro - Home' },
@@ -14,7 +15,7 @@ export const routes: Routes = [
       {
         path: '',
         component: ListaChurrascoComponent,
-        title: 'Churrascometro - Novo churrasco',
+        title: 'Churrascometro - Lista de Churrascos',
       },
       {
         path: 'novo',
@@ -28,5 +29,6 @@ export const routes: Routes = [
       },
     ],
   },
+  { path: 'produtos', component: CriacaoProdutoComponent, title: 'Churrascometro - Criação de Produto' },
   { path: '**', component: NotFoundComponent },
 ];

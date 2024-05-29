@@ -1,0 +1,17 @@
+<form [formGroup]="form" class="flex flex-col m-10">
+    <h2 class="text-xl font-bold mb-4">Criação de Carne</h2>
+    @for (formControl of campos; track formControl) {
+        <mat-form-field>
+            <input
+              matInput
+              [type]="formControl.tipo"
+              [formControlName]="formControl.nome"
+              [placeholder]="formControl.placeholder"
+            />
+        </mat-form-field>
+    }
+
+    <button mat-raised-button color="primary" class="button-start mb-6" (click)="submit()">
+        Criar
+    </button>
+</form>

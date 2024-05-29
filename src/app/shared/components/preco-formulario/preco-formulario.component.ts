@@ -21,6 +21,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { TipoChurrasco } from '../../models/enums/tipoChurrasco.enum';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-preco-formulario',
@@ -135,6 +136,9 @@ export class PrecoFormularioComponent implements OnInit {
 
   exibirResultados = false;
 
+  getCarnes = this.churrascometroService.getCarnes;
+  getBebidas = this.churrascometroService.getBebidas;
+
   constructor(
     private churrascometroService: ChurrascometroService,
     private formBuilder: FormBuilder
@@ -168,19 +172,8 @@ export class PrecoFormularioComponent implements OnInit {
       if (this.valor_total() > 0) {
         this.exibirResultados = true;
       }
-    })
-  }
-
-  ngOnInit(): void {
-    this.inicializarService();
-  }
-
-  inicializarService(): void {
-    this.churrascometroService
-      .getCarnes()
-      .pipe(
-        map((carnes) => {
-          carnes.forEach((carne) => {
+      if (this.getCarnes() !== null && this.getCarnes().length > 0) {
+        this.getCarnes().forEach(carne => {
             switch (carne.nome) {
               case 'picanha':
                 this.preco_picanha = carne.preco_kg;
@@ -213,43 +206,45 @@ export class PrecoFormularioComponent implements OnInit {
                 this.consumo_crianca_abacaxi = carne.consumo_medio_crianca_g;
                 break;
             }
-          });
-        })
-      )
-      .subscribe();
+        });
+      }
+      if (this.getBebidas() !== null && this.getBebidas().length > 0) {
+        this.getBebidas().forEach(bebida => {
+          switch (bebida.nome) {
+            case 'cerveja':
+              this.preco_cerveja = bebida.preco_unidade;
+              this.consumo_adulto_cerveja = bebida.consumo_medio_adulto_ml;
+              break;
+            case 'refrigerante':
+              this.preco_refrigerante = bebida.preco_unidade;
+              this.consumo_adulto_refrigerante =
+                bebida.consumo_medio_adulto_ml;
+              this.consumo_crianca_refrigerante =
+                bebida.consumo_medio_crianca_ml;
+              break;
+            case 'água':
+              this.preco_agua = bebida.preco_unidade;
+              this.consumo_adulto_agua = bebida.consumo_medio_adulto_ml;
+              this.consumo_crianca_agua = bebida.consumo_medio_crianca_ml;
+              break;
+            case 'suco':
+              this.preco_suco = bebida.preco_unidade;
+              this.consumo_adulto_suco = bebida.consumo_medio_adulto_ml;
+              this.consumo_crianca_suco = bebida.consumo_medio_crianca_ml;
+              break;
+          }
+        });
+      }
+    })
+  }
 
-    this.churrascometroService
-      .getBebidas()
-      .pipe(
-        map((bebidas) => {
-          bebidas.forEach((bebida) => {
-            switch (bebida.nome) {
-              case 'cerveja':
-                this.preco_cerveja = bebida.preco_unidade;
-                this.consumo_adulto_cerveja = bebida.consumo_medio_adulto_ml;
-                break;
-              case 'refrigerante':
-                this.preco_refrigerante = bebida.preco_unidade;
-                this.consumo_adulto_refrigerante =
-                  bebida.consumo_medio_adulto_ml;
-                this.consumo_crianca_refrigerante =
-                  bebida.consumo_medio_crianca_ml;
-                break;
-              case 'água':
-                this.preco_agua = bebida.preco_unidade;
-                this.consumo_adulto_agua = bebida.consumo_medio_adulto_ml;
-                this.consumo_crianca_agua = bebida.consumo_medio_crianca_ml;
-                break;
-              case 'suco':
-                this.preco_suco = bebida.preco_unidade;
-                this.consumo_adulto_suco = bebida.consumo_medio_adulto_ml;
-                this.consumo_crianca_suco = bebida.consumo_medio_crianca_ml;
-                break;
-            }
-          });
-        })
-      )
-      .subscribe();
+  ngOnInit(): void {
+    this.inicializarService();
+  }
+
+  inicializarService(): void {
+    this.churrascometroService.httpGetCarnes().subscribe();
+    this.churrascometroService.httpGetBebidas().subscribe();
   }
 
   submit(): void {
