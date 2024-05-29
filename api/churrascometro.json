@@ -1,7 +1,7 @@
 {
   "carnes": [
     {
-      "id": "1",
+      "id": 1,
       "nome": "picanha",
       "tipo": "bovina",
       "preco_kg": 70,
@@ -9,7 +9,7 @@
       "consumo_medio_crianca_g": 100
     },
     {
-      "id": "2",
+      "id": 2,
       "nome": "costela",
       "tipo": "bovina",
       "preco_kg": 35,
@@ -17,7 +17,7 @@
       "consumo_medio_crianca_g": 100
     },
     {
-      "id": "3",
+      "id": 3,
       "nome": "linguiça",
       "tipo": "suína",
       "preco_kg": 30,
@@ -25,7 +25,7 @@
       "consumo_medio_crianca_g": 100
     },
     {
-      "id": "4",
+      "id": 4,
       "nome": "frango",
       "tipo": "ave",
       "preco_kg": 15,
@@ -33,7 +33,7 @@
       "consumo_medio_crianca_g": 100
     },
     {
-      "id": "5",
+      "id": 5,
       "nome": "queijo",
       "tipo": "laticínio",
       "preco_kg": 80,
@@ -41,7 +41,7 @@
       "consumo_medio_crianca_g": 100
     },
     {
-      "id": "6",
+      "id": 6,
       "nome": "abacaxi",
       "tipo": "fruta",
       "preco_kg": 5,
@@ -51,7 +51,7 @@
   ],
   "bebidas": [
     {
-      "id": "1",
+      "id": 1,
       "nome": "cerveja",
       "tipo": "alcoólica",
       "preco_unidade": 5,
@@ -59,7 +59,7 @@
       "consumo_medio_crianca_ml": 0
     },
     {
-      "id": "2",
+      "id": 2,
       "nome": "refrigerante",
       "tipo": "não alcoólica",
       "preco_unidade": 3,
@@ -67,7 +67,7 @@
       "consumo_medio_crianca_ml": 200
     },
     {
-      "id": "3",
+      "id": 3,
       "nome": "água",
       "tipo": "não alcoólica",
       "preco_unidade": 2,
@@ -75,7 +75,7 @@
       "consumo_medio_crianca_ml": 300
     },
     {
-      "id": "4",
+      "id": 4,
       "nome": "suco",
       "tipo": "não alcoólica",
       "preco_unidade": 6,
