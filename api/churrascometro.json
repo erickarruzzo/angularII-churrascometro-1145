@@ -47,6 +47,14 @@
       "preco_kg": 5,
       "consumo_medio_adulto_g": 150,
       "consumo_medio_crianca_g": 50
+    },
+    {
+      "id": "d0de",
+      "nome": "Melão",
+      "tipo": "Fruta",
+      "preco_kg": "3",
+      "consumo_medio_adulto_g": "100",
+      "consumo_medio_crianca_g": "50"
     }
   ],
   "bebidas": [

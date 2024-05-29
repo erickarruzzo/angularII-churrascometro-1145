@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable, catchError, map, throwError } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
+import { Observable, catchError, map, tap, throwError } from 'rxjs';
 import { Carnes } from '../models/carnes.interface';
 import { Bebidas } from '../models/bebidas.interface';
 
@@ -11,16 +11,39 @@ export class ChurrascometroService {
 
   private API_URL = 'http://localhost:3000';
 
+  private carnes = signal<Carnes[]>([]);
+  public getCarnes = this.carnes.asReadonly();
+
+  private bebidas = signal<Bebidas[]>([]);
+  public getBebidas = this.bebidas.asReadonly();
+
+  private produto = signal<any | null>(null);
+
   constructor(private http: HttpClient) { }
 
-  getCarnes(): Observable<Carnes[]> {
+  httpGetCarnes(): Observable<Carnes[]> {
     return this.http.get<Carnes[]>(`${this.API_URL}/carnes`).pipe(
+      tap((carnes) => {
+        this.carnes.set(carnes)
+      }),
+      catchError(this.handlerError)
+    );
+  }
+
+  httpGetBebidas(): Observable<Bebidas[]> {
+    return this.http.get<Bebidas[]>(`${this.API_URL}/bebidas`).pipe(
+      tap((bebidas) => {
+        this.bebidas.set(bebidas);
+      }),
       catchError(this.handlerError)
     )
   }
 
-  getBebidas(): Observable<Bebidas[]> {
-    return this.http.get<Bebidas[]>(`${this.API_URL}/bebidas`).pipe(
+  httpCreateProduto(carne: any, endpoint: string): Observable<any> {
+    return this.http.post<any>(`${this.API_URL}/${endpoint}`, carne).pipe(
+      tap((produto: any) => {
+        this.produto.set(produto); 
+      }),
       catchError(this.handlerError)
     )
   }

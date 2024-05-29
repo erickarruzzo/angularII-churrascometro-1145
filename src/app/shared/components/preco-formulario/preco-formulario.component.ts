@@ -135,6 +135,9 @@ export class PrecoFormularioComponent implements OnInit {
 
   exibirResultados = false;
 
+  getCarnes = this.churrascometroService.getCarnes;
+  getBebidas = this.churrascometroService.getBebidas;
+
   constructor(
     private churrascometroService: ChurrascometroService,
     private formBuilder: FormBuilder
@@ -168,7 +171,72 @@ export class PrecoFormularioComponent implements OnInit {
       if (this.valor_total() > 0) {
         this.exibirResultados = true;
       }
-    })
+
+      if (this.getBebidas()?.length > 0) {
+        this.getBebidas().forEach((bebida) => {
+          switch (bebida.nome) {
+            case 'cerveja':
+              this.preco_cerveja = bebida.preco_unidade;
+              this.consumo_adulto_cerveja = bebida.consumo_medio_adulto_ml;
+              break;
+            case 'refrigerante':
+              this.preco_refrigerante = bebida.preco_unidade;
+              this.consumo_adulto_refrigerante =
+                bebida.consumo_medio_adulto_ml;
+              this.consumo_crianca_refrigerante =
+                bebida.consumo_medio_crianca_ml;
+              break;
+            case 'água':
+              this.preco_agua = bebida.preco_unidade;
+              this.consumo_adulto_agua = bebida.consumo_medio_adulto_ml;
+              this.consumo_crianca_agua = bebida.consumo_medio_crianca_ml;
+              break;
+            case 'suco':
+              this.preco_suco = bebida.preco_unidade;
+              this.consumo_adulto_suco = bebida.consumo_medio_adulto_ml;
+              this.consumo_crianca_suco = bebida.consumo_medio_crianca_ml;
+              break;
+          }
+        });
+      }
+
+      if (this.getCarnes() !== null && this.getCarnes().length > 0) {
+        this.getCarnes().forEach((carne) => {
+          switch (carne.nome) {
+            case 'picanha':
+              this.preco_picanha = carne.preco_kg;
+              this.consumo_adulto_picanha = carne.consumo_medio_adulto_g;
+              this.consumo_crianca_picanha = carne.consumo_medio_crianca_g;
+              break;
+            case 'costela':
+              this.preco_costela = carne.preco_kg;
+              this.consumo_adulto_costela = carne.consumo_medio_adulto_g;
+              this.consumo_crianca_costela = carne.consumo_medio_crianca_g;
+              break;
+            case 'linguiça':
+              this.preco_linguica = carne.preco_kg;
+              this.consumo_adulto_linguica = carne.consumo_medio_adulto_g;
+              this.consumo_crianca_linguica = carne.consumo_medio_crianca_g;
+              break;
+            case 'frango':
+              this.preco_frango = carne.preco_kg;
+              this.consumo_adulto_frango = carne.consumo_medio_adulto_g;
+              this.consumo_crianca_frango = carne.consumo_medio_crianca_g;
+              break;
+            case 'queijo':
+              this.preco_queijo = carne.preco_kg;
+              this.consumo_adulto_queijo = carne.consumo_medio_adulto_g;
+              this.consumo_crianca_queijo = carne.consumo_medio_crianca_g;
+              break;
+            case 'abacaxi':
+              this.preco_abacaxi = carne.preco_kg;
+              this.consumo_adulto_abacaxi = carne.consumo_medio_adulto_g;
+              this.consumo_crianca_abacaxi = carne.consumo_medio_crianca_g;
+              break;
+          }
+        });
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -176,80 +244,8 @@ export class PrecoFormularioComponent implements OnInit {
   }
 
   inicializarService(): void {
-    this.churrascometroService
-      .getCarnes()
-      .pipe(
-        map((carnes) => {
-          carnes.forEach((carne) => {
-            switch (carne.nome) {
-              case 'picanha':
-                this.preco_picanha = carne.preco_kg;
-                this.consumo_adulto_picanha = carne.consumo_medio_adulto_g;
-                this.consumo_crianca_picanha = carne.consumo_medio_crianca_g;
-                break;
-              case 'costela':
-                this.preco_costela = carne.preco_kg;
-                this.consumo_adulto_costela = carne.consumo_medio_adulto_g;
-                this.consumo_crianca_costela = carne.consumo_medio_crianca_g;
-                break;
-              case 'linguiça':
-                this.preco_linguica = carne.preco_kg;
-                this.consumo_adulto_linguica = carne.consumo_medio_adulto_g;
-                this.consumo_crianca_linguica = carne.consumo_medio_crianca_g;
-                break;
-              case 'frango':
-                this.preco_frango = carne.preco_kg;
-                this.consumo_adulto_frango = carne.consumo_medio_adulto_g;
-                this.consumo_crianca_frango = carne.consumo_medio_crianca_g;
-                break;
-              case 'queijo':
-                this.preco_queijo = carne.preco_kg;
-                this.consumo_adulto_queijo = carne.consumo_medio_adulto_g;
-                this.consumo_crianca_queijo = carne.consumo_medio_crianca_g;
-                break;
-              case 'abacaxi':
-                this.preco_abacaxi = carne.preco_kg;
-                this.consumo_adulto_abacaxi = carne.consumo_medio_adulto_g;
-                this.consumo_crianca_abacaxi = carne.consumo_medio_crianca_g;
-                break;
-            }
-          });
-        })
-      )
-      .subscribe();
-
-    this.churrascometroService
-      .getBebidas()
-      .pipe(
-        map((bebidas) => {
-          bebidas.forEach((bebida) => {
-            switch (bebida.nome) {
-              case 'cerveja':
-                this.preco_cerveja = bebida.preco_unidade;
-                this.consumo_adulto_cerveja = bebida.consumo_medio_adulto_ml;
-                break;
-              case 'refrigerante':
-                this.preco_refrigerante = bebida.preco_unidade;
-                this.consumo_adulto_refrigerante =
-                  bebida.consumo_medio_adulto_ml;
-                this.consumo_crianca_refrigerante =
-                  bebida.consumo_medio_crianca_ml;
-                break;
-              case 'água':
-                this.preco_agua = bebida.preco_unidade;
-                this.consumo_adulto_agua = bebida.consumo_medio_adulto_ml;
-                this.consumo_crianca_agua = bebida.consumo_medio_crianca_ml;
-                break;
-              case 'suco':
-                this.preco_suco = bebida.preco_unidade;
-                this.consumo_adulto_suco = bebida.consumo_medio_adulto_ml;
-                this.consumo_crianca_suco = bebida.consumo_medio_crianca_ml;
-                break;
-            }
-          });
-        })
-      )
-      .subscribe();
+    this.churrascometroService.httpGetCarnes().subscribe();
+    this.churrascometroService.httpGetBebidas().subscribe();
   }
 
   submit(): void {
@@ -290,93 +286,111 @@ export class PrecoFormularioComponent implements OnInit {
       }
 
       if (picanha) {
-        this.valor_total_picanha.update(this.calculaPreco(
-          adultos,
-          criancas,
-          this.consumo_adulto_picanha,
-          this.consumo_crianca_picanha,
-          this.preco_picanha
-        ));
+        this.valor_total_picanha.update(
+          this.calculaPreco(
+            adultos,
+            criancas,
+            this.consumo_adulto_picanha,
+            this.consumo_crianca_picanha,
+            this.preco_picanha
+          )
+        );
       }
 
       if (costela) {
-        this.valor_total_costela.update(this.calculaPreco(
-          adultos,
-          criancas,
-          this.consumo_adulto_costela,
-          this.consumo_crianca_costela,
-          this.preco_costela
-        ));
+        this.valor_total_costela.update(
+          this.calculaPreco(
+            adultos,
+            criancas,
+            this.consumo_adulto_costela,
+            this.consumo_crianca_costela,
+            this.preco_costela
+          )
+        );
       }
 
       if (linguica) {
-        this.valor_total_linguica.update(this.calculaPreco(
-          adultos,
-          criancas,
-          this.consumo_adulto_linguica,
-          this.consumo_crianca_linguica,
-          this.preco_linguica
-        ));
+        this.valor_total_linguica.update(
+          this.calculaPreco(
+            adultos,
+            criancas,
+            this.consumo_adulto_linguica,
+            this.consumo_crianca_linguica,
+            this.preco_linguica
+          )
+        );
       }
 
       if (frango) {
-        this.valor_total_frango.update(this.calculaPreco(
-          adultos,
-          criancas,
-          this.consumo_adulto_frango,
-          this.consumo_crianca_frango,
-          this.preco_frango
-        ));
+        this.valor_total_frango.update(
+          this.calculaPreco(
+            adultos,
+            criancas,
+            this.consumo_adulto_frango,
+            this.consumo_crianca_frango,
+            this.preco_frango
+          )
+        );
       }
 
       if (queijo) {
-        this.valor_total_queijo.update(this.calculaPreco(
-          adultos,
-          criancas,
-          this.consumo_adulto_queijo,
-          this.consumo_crianca_queijo,
-          this.preco_queijo
-        ));
+        this.valor_total_queijo.update(
+          this.calculaPreco(
+            adultos,
+            criancas,
+            this.consumo_adulto_queijo,
+            this.consumo_crianca_queijo,
+            this.preco_queijo
+          )
+        );
       }
 
       if (abacaxi) {
-        this.valor_total_abacaxi.update(this.calculaPreco(
-          adultos,
-          criancas,
-          this.consumo_adulto_abacaxi,
-          this.consumo_crianca_abacaxi,
-          this.preco_abacaxi
-        ));
+        this.valor_total_abacaxi.update(
+          this.calculaPreco(
+            adultos,
+            criancas,
+            this.consumo_adulto_abacaxi,
+            this.consumo_crianca_abacaxi,
+            this.preco_abacaxi
+          )
+        );
       }
 
       if (cerveja) {
-        this.valor_total_cerveja.update(this.calculaPreco(
-          adultos,
-          0,
-          this.consumo_adulto_cerveja,
-          0,
-          this.preco_cerveja
-        ));
+        this.valor_total_cerveja.update(
+          this.calculaPreco(
+            adultos,
+            0,
+            this.consumo_adulto_cerveja,
+            0,
+            this.preco_cerveja
+          )
+        );
       }
 
       if (refrigerante) {
-        this.valor_total_refrigerante.update(this.calculaPreco(
-          adultos,
-          criancas,
-          this.consumo_adulto_refrigerante,
-          this.consumo_crianca_refrigerante,
-          this.preco_refrigerante
-        ));
+        this.valor_total_refrigerante.update(
+          this.calculaPreco(
+            adultos,
+            criancas,
+            this.consumo_adulto_refrigerante,
+            this.consumo_crianca_refrigerante,
+            this.preco_refrigerante
+          )
+        );
       }
 
       if (agua) {
-        this.valor_total_agua.update(this.calculaPreco(
-          adultos,
-          criancas,
-          this.consumo_adulto_agua,
-          this.consumo_crianca_agua,
-          this.preco_agua
-        ));
+        this.valor_total_agua.update(
+          this.calculaPreco(
+            adultos,
+            criancas,
+            this.consumo_adulto_agua,
+            this.consumo_crianca_agua,
+            this.preco_agua
+          )
+        );
       }
 
       if (suco) {

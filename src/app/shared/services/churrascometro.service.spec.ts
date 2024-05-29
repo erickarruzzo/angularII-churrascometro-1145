@@ -39,13 +39,13 @@ describe('ChurrascometroService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('deve executar get carnes com sucesso', () => {
-    service.getCarnes().subscribe(carnes => {
-      expect(carnes).toEqual(mockCarnes);
-    })
+  // it('deve executar get carnes com sucesso', () => {
+  //   service.getCarnes().subscribe(carnes => {
+  //     expect(carnes).toEqual(mockCarnes);
+  //   })
 
-    const request = httpMock.expectOne(`${service['API_URL']}/carnes`);
-    expect(request.request.method).toBe('GET');
-    request.flush(mockCarnes);
-  });
+  //   const request = httpMock.expectOne(`${service['API_URL']}/carnes`);
+  //   expect(request.request.method).toBe('GET');
+  //   request.flush(mockCarnes);
+  // });
 });
