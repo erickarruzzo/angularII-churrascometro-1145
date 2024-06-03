@@ -1,5 +1,5 @@
 export interface Bebidas {
-  id: string;
+  id: number;
   nome: string;
   tipo: string;
   preco_unidade: number;

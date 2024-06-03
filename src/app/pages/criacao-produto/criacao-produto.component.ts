@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ProdutoFormularioComponent } from '../../shared/components/produto-formulario/produto-formulario.component';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ChurrascometroService } from '../../shared/services/churrascometro.service';
@@ -11,5 +11,8 @@ import { ChurrascometroService } from '../../shared/services/churrascometro.serv
   styleUrl: './criacao-produto.component.scss'
 })
 export class CriacaoProdutoComponent {
-
+  paramId?: string = '';
+  @Input() set id(id: string) {
+    this.paramId = id;
+  }
 }

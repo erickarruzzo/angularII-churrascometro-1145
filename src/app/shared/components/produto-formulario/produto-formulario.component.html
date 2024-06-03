@@ -1,5 +1,9 @@
 <form [formGroup]="form" class="flex flex-col m-10">
-    <h2 class="text-xl font-bold mb-4">Criação de Carne</h2>
+    @if (id) {
+        <h2 class="text-xl font-bold mb-4">Edição de Carne</h2>
+    } @else {
+        <h2 class="text-xl font-bold mb-4">Criação de Carne</h2>
+    }
     @for (campo of campos; track campo.nome) {
         <mat-form-field>
             <input
@@ -10,7 +14,19 @@
             />
         </mat-form-field>
     }
-    <button mat-raised-button color="primary" class="button-start mb-6" [disabled]="!form.valid" (click)="submit()">
-        Criar
-    </button>
+    @if (id) {
+        <div class="grid grid-flow-col justify-stretch">
+            <button mat-raised-button color="primary" class="button-start" [disabled]="!form.valid" (click)="submit()">
+                Editar
+            </button>
+            <button mat-raised-button color="warn" class="button-end" (click)="apagar()">
+                Apagar
+            </button>
+        </div>
+    } @else {
+        <button mat-raised-button color="primary" class="button-start mb-6" [disabled]="!form.valid" (click)="submit()">
+            Criar
+        </button>
+    }
+    
 </form>

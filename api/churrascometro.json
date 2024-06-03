@@ -1,20 +1,20 @@
 {
   "carnes": [
     {
-      "id": "1",
       "nome": "picanha",
       "tipo": "bovina",
-      "preco_kg": 70,
+      "preco_kg": 80,
       "consumo_medio_adulto_g": 300,
-      "consumo_medio_crianca_g": 100
+      "consumo_medio_crianca_g": 100,
+      "id": "1"
     },
     {
-      "id": "2",
       "nome": "costela",
       "tipo": "bovina",
       "preco_kg": 35,
       "consumo_medio_adulto_g": 250,
-      "consumo_medio_crianca_g": 100
+      "consumo_medio_crianca_g": 100,
+      "id": "2"
     },
     {
       "id": "3",
@@ -47,14 +47,6 @@
       "preco_kg": 5,
       "consumo_medio_adulto_g": 150,
       "consumo_medio_crianca_g": 50
-    },
-    {
-      "id": "d0de",
-      "nome": "Melão",
-      "tipo": "Fruta",
-      "preco_kg": "3",
-      "consumo_medio_adulto_g": "100",
-      "consumo_medio_crianca_g": "50"
     }
   ],
   "bebidas": [

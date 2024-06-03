@@ -5,6 +5,7 @@ import { ListaChurrascoComponent } from './pages/lista-churrasco/lista-churrasco
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { DetalheChurrascoComponent } from './pages/detalhe-churrasco/detalhe-churrasco.component';
 import { CriacaoProdutoComponent } from './pages/criacao-produto/criacao-produto.component';
+import { BadRequestComponent } from './pages/bad-request/bad-request.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent, title: 'Churrascometro - Home' },
@@ -29,6 +30,26 @@ export const routes: Routes = [
       },
     ],
   },
-  { path: 'produtos', component: CriacaoProdutoComponent, title: 'Churrascometro - Criação de Produto' },
+  {
+    path: 'produtos',
+    children: [
+      {
+        path: '',
+        component: CriacaoProdutoComponent,
+        title: 'Churrascometro - Criação de Produto',
+      },
+      {
+        path: ':id',
+        component: CriacaoProdutoComponent,
+        title: 'Churrascometro - Edição de Produto',
+      },
+    ],
+  },
+  {
+    path: 'produtos/:id',
+    component: CriacaoProdutoComponent,
+    title: 'Churrascometro - Edição de Produto',
+  },
+  { path: 'bad-request', component: BadRequestComponent },
   { path: '**', component: NotFoundComponent },
 ];
