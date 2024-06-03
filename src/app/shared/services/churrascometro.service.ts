@@ -18,6 +18,7 @@ export class ChurrascometroService {
   public getBebidas = this.bebidas.asReadonly();
 
   private produto = signal<any | null>(null);
+  public getProduto = this.produto.asReadonly();
 
   constructor(private http: HttpClient) { }
 
@@ -43,6 +44,43 @@ export class ChurrascometroService {
     return this.http.post<any>(`${this.API_URL}/${endpoint}`, carne).pipe(
       tap((produto: any) => {
         this.produto.set(produto); 
+      }),
+      catchError(this.handlerError)
+    )
+  }
+
+  httpGetProduto(id: string, endpoint: string): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}/${endpoint}/${id}`).pipe(
+      tap((produto: any) => {
+        this.produto.set(produto);
+      }),
+      catchError(this.handlerError)
+    )
+  }
+
+  httpUpdateNomeProduto(id: string, nome: string, endpoint:string): Observable<any> {
+    return this.http.patch<any>(`${this.API_URL}/${endpoint}/${id}`, { 'nome': nome })
+    .pipe(
+      tap((produto: any) => {
+        this.produto.set(produto);
+      }),
+      catchError(this.handlerError)
+    )
+  }
+
+  httpUpdateProduto(id: string, endpoint: string, produto: any): Observable<any> {
+    return this.http.put<any>(`${this.API_URL}/${endpoint}/${id}`, produto).pipe(
+      tap((produto: any) => {
+        this.produto.set(produto);
+      }),
+      catchError(this.handlerError)
+    )
+  }
+
+  httpDeleteProduto(id: string, endpoint: string): Observable<any> {
+    return this.http.delete<void>(`${this.API_URL}/${endpoint}/${id}`).pipe(
+      tap(() => {
+        this.produto.set(null);
       }),
       catchError(this.handlerError)
     )

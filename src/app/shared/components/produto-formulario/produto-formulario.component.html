@@ -1,5 +1,11 @@
 <form [formGroup]="form" class="flex flex-col m-10">
-    <h2 class="text-xl font-bold mb-4">Criação de Carne</h2>
+    <h2 class="text-xl font-bold mb-4">
+        @if (idRoute) {
+            Edição de Carne
+        } @else {
+            Criação de Carne
+        }
+    </h2>
     @for (campo of campos; track campo.nome) {
         <mat-form-field>
             <input
@@ -10,7 +16,14 @@
             />
         </mat-form-field>
     }
-    <button mat-raised-button color="primary" class="button-start mb-6" [disabled]="!form.valid" (click)="submit()">
-        Criar
+    <button mat-raised-button color="primary" class="button-start mb-6" [disabled]="!form.valid" (click)="idRoute ? editar() : criar()">
+        @if (idRoute) {
+            Editar
+        } @else {
+            Criar
+        }
     </button>
+    @if (idRoute) {
+        <button mat-raised-button color="warn" class="button-start mb-6" (click)="deletar()">Apagar</button>
+    }
 </form>

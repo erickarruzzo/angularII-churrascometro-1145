@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, effect } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChurrascometroService } from '../../services/churrascometro.service';
 import { CommonModule } from '@angular/common';
@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Carnes } from '../../models/carnes.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-produto-formulario',
@@ -22,6 +23,9 @@ import { Carnes } from '../../models/carnes.interface';
   styleUrl: './produto-formulario.component.scss'
 })
 export class ProdutoFormularioComponent implements OnInit {
+  @Input() idRoute!: string;
+  @Input() produtoRoute: string = 'carnes';
+
   campos = [
     { nome: 'nome', tipo: 'text', placeholder: 'Nome' },
     { nome: 'tipo', tipo: 'text', placeholder: 'Tipo' },
@@ -31,11 +35,19 @@ export class ProdutoFormularioComponent implements OnInit {
   ];
 
   form!: FormGroup;
+  // getProduto = this.servico.getProduto;
 
   constructor(
     private formBuilder: FormBuilder,
-    private servico: ChurrascometroService
-  ) {}
+    private servico: ChurrascometroService,
+    private route: Router
+  ) {
+    effect(() => {
+      if (this.servico.getProduto()) {
+        this.form.patchValue(this.servico.getProduto());
+      }
+    })
+  }
 
 
   ngOnInit(): void {
@@ -44,31 +56,23 @@ export class ProdutoFormularioComponent implements OnInit {
     this.campos.forEach((campo) => {
       this.addFormControl(campo.nome, [Validators.required])
     });
+
+    if (this.idRoute) {
+      console.log('ID', this.idRoute);
+      this.servico.httpGetProduto(this.idRoute, 'carnes').subscribe();
+    }
   }
 
   private addFormControl(fieldName: string, validators: any[] = []): void {
     this.form.addControl(fieldName, this.formBuilder.control('', validators));
   }
 
-  submit() {
+  criar() {
     if (this.form.valid) {
-      let carne!: Carnes;
+      const produto = this.getProduto();
 
-      // { nome: 'tipo', tipo: 'text', placeholder: 'Tipo' },
-      this.campos.forEach((campo) => {
-        const value = this.getValorFormControl(campo.nome); // Fruta
-  
-        if (value) {
-          carne = {
-            ...carne, // carne == { nome: Melão }
-            [campo.nome]: campo.tipo === "number" ? parseInt(value) : value // tipo: Fruta
-          }
-        }
-        // carne == { nome: 'Melão', tipo: 'Fruta' }
-      })
-
-      if (carne) {
-        this.servico.httpCreateProduto(carne, 'carnes').subscribe({
+      if (produto) {
+        this.servico.httpCreateProduto(produto, 'carnes').subscribe({
           next: (retorno) => {
             this.form.reset();
             console.log(retorno);
@@ -77,6 +81,60 @@ export class ProdutoFormularioComponent implements OnInit {
         })
       }
     }
+  }
+
+  editar() {
+    if (this.form.valid) {
+      const produto = this.getProduto();
+      // this.servico.httpUpdateNomeProduto(this.idRoute, nome, 'carnes')
+      // .subscribe({
+      //   next: (retorno) => {
+      //     console.log('Editado', retorno);
+      //     this.route.navigate(['/home']);
+      //   }, error: (error) => console.error(error)
+      // });
+      if (produto) {
+        this.servico.httpUpdateProduto(this.idRoute, 'carnes', produto).subscribe({
+          next: (retorno: any) => {
+            console.log('Editado', retorno);
+            this.route.navigate(['/home']);
+          },
+          error: (error) => console.error(error),
+        });
+      }
+    }
+  }
+
+  deletar() {
+    if (this.idRoute) {
+      this.servico.httpDeleteProduto(this.idRoute, 'carnes').subscribe({
+        next: () => {
+          console.log('Apagado');
+          this.form.reset();
+          this.route.navigate(['/home']);
+          alert('Apagado');
+        }, error: (error) => console.error(error)
+      });
+    }
+  }
+
+  private getProduto(): any {
+    let produto!: any;
+
+    // { nome: 'tipo', tipo: 'text', placeholder: 'Tipo' },
+    this.campos.forEach((campo) => {
+      const value = this.getValorFormControl(campo.nome); // Fruta
+
+      if (value) {
+        produto = {
+          ...produto, 
+          [campo.nome]: campo.tipo === "number" ? parseInt(value) : value // tipo: Fruta
+        }
+      }
+      
+    })
+
+    return produto;
   }
 
   private getValorFormControl(nome: string): string | null {

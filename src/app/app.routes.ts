@@ -29,6 +29,20 @@ export const routes: Routes = [
       },
     ],
   },
-  { path: 'produtos', component: CriacaoProdutoComponent, title: 'Churrascometro - Criação de Produto' },
+  {
+    path: 'produtos',
+    children: [
+      {
+        path: ':produto',
+        component: CriacaoProdutoComponent,
+        title: 'Churrascometro - Criação de Produtos',
+      },
+      {
+        path: ':produto/:id',
+        component: CriacaoProdutoComponent,
+        title: 'Churrascometro - Edição de Produtos',
+      },
+    ],
+  },
   { path: '**', component: NotFoundComponent },
 ];
