@@ -5,6 +5,7 @@ import { ListaChurrascoComponent } from './pages/lista-churrasco/lista-churrasco
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { DetalheChurrascoComponent } from './pages/detalhe-churrasco/detalhe-churrasco.component';
 import { CriacaoProdutoComponent } from './pages/criacao-produto/criacao-produto.component';
+import { ListaProdutoComponent } from './pages/lista-produto/lista-produto.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent, title: 'Churrascometro - Home' },
@@ -32,6 +33,11 @@ export const routes: Routes = [
   {
     path: 'produtos',
     children: [
+      {
+        path: '',
+        component: ListaProdutoComponent,
+        title: 'Churrascometro - Lista de Produtos',
+      },
       {
         path: ':produto',
         component: CriacaoProdutoComponent,

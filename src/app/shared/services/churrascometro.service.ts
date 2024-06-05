@@ -85,6 +85,10 @@ export class ChurrascometroService {
     )
   }
 
+  setProdutoNull() {
+    this.produto.set(null);
+  }
+
   private handlerError(error: HttpErrorResponse): Observable<any> {
     console.log('Ocorreu um erro: ' + error);
     return throwError(() => error);

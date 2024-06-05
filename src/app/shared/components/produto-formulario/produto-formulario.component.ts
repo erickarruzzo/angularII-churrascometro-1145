@@ -34,7 +34,7 @@ export class ProdutoFormularioComponent implements OnInit {
   ];
 
   form!: FormGroup;
-  // getProduto = this.servico.getProduto;
+  produto = this.servico.getProduto;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -42,8 +42,8 @@ export class ProdutoFormularioComponent implements OnInit {
     private route: Router
   ) {
     effect(() => {
-      if (this.servico.getProduto()) {
-        this.form.patchValue(this.servico.getProduto());
+      if (this.produto()) {
+        this.form.patchValue(this.produto());
       }
     })
   }
@@ -59,6 +59,8 @@ export class ProdutoFormularioComponent implements OnInit {
     if (this.idRoute) {
       console.log('ID', this.idRoute);
       this.servico.httpGetProduto(this.idRoute, 'carnes').subscribe();
+    } else {
+      this.servico.setProdutoNull();
     }
   }
 

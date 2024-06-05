@@ -1,6 +1,6 @@
 <form [formGroup]="form" class="flex flex-col m-10">
     <h2 class="text-xl font-bold mb-4">
-        @if (idRoute) {
+        @if (produto()) {
             Edição de Carne
         } @else {
             Criação de Carne
@@ -17,13 +17,13 @@
         </mat-form-field>
     }
     <button mat-raised-button color="primary" class="button-start mb-6" [disabled]="!form.valid" (click)="idRoute ? editar() : criar()">
-        @if (idRoute) {
+        @if (produto()) {
             Editar
         } @else {
             Criar
         }
     </button>
-    @if (idRoute) {
+    @if (produto()) {
         <button mat-raised-button color="warn" class="button-start mb-6" (click)="deletar()">Apagar</button>
     }
 </form>
