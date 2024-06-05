@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Carnes } from '../../models/carnes.interface';
 import { Router } from '@angular/router';
 
 @Component({
@@ -74,8 +73,8 @@ export class ProdutoFormularioComponent implements OnInit {
       if (produto) {
         this.servico.httpCreateProduto(produto, 'carnes').subscribe({
           next: (retorno) => {
-            this.form.reset();
-            console.log(retorno);
+            console.log('Criado', retorno);
+            this.route.navigate(['/home']);
           },
           error: (error) => console.error(error),
         })
@@ -109,8 +108,6 @@ export class ProdutoFormularioComponent implements OnInit {
     if (this.idRoute) {
       this.servico.httpDeleteProduto(this.idRoute, 'carnes').subscribe({
         next: () => {
-          console.log('Apagado');
-          this.form.reset();
           this.route.navigate(['/home']);
           alert('Apagado');
         }, error: (error) => console.error(error)
