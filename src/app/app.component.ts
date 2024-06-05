@@ -3,6 +3,8 @@ import { RouterOutlet } from '@angular/router';
 import pt from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
 import { HeaderComponent } from './shared/components/header/header.component';
+import { LoginService } from './shared/services/login.service';
+import { StorageService } from './shared/services/storage.service';
 
 registerLocaleData(pt);
 
@@ -12,12 +14,29 @@ registerLocaleData(pt);
   imports: [RouterOutlet, HeaderComponent],
   providers: [
     {
-      provide: LOCALE_ID, useValue: 'pt'
-    }
+      provide: LOCALE_ID,
+      useValue: 'pt',
+    },
   ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
 })
 export class AppComponent {
   title = 'churrascometro';
+  user: string = 'letscode';
+  pass: string = 'lets@123';
+
+  constructor(private auth: LoginService, private storage: StorageService) {
+    this.login();
+  }
+
+  login() {
+    this.auth.login(this.user, this.pass).subscribe({
+      next: (retorno) => {
+        console.log('retorno', retorno);
+        this.storage.setToken(retorno);
+      },
+      error: (error) => console.error(error),
+    });
+  }
 }
