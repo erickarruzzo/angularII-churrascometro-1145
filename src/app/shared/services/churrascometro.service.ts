@@ -3,13 +3,14 @@ import { Injectable, signal } from '@angular/core';
 import { Observable, catchError, map, tap, throwError } from 'rxjs';
 import { Carnes } from '../models/carnes.interface';
 import { Bebidas } from '../models/bebidas.interface';
+import { API_URL } from '../models/constants/constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChurrascometroService {
 
-  private API_URL = 'http://localhost:3000';
+  // private API_URL = 'http://localhost:3000';
 
   private carnes = signal<Carnes[]>([]);
   public getCarnes = this.carnes.asReadonly();
@@ -23,7 +24,7 @@ export class ChurrascometroService {
   constructor(private http: HttpClient) { }
 
   httpGetCarnes(): Observable<Carnes[]> {
-    return this.http.get<Carnes[]>(`${this.API_URL}/carnes`).pipe(
+    return this.http.get<Carnes[]>(`${API_URL}/carnes`).pipe(
       tap((carnes) => {
         this.carnes.set(carnes)
       }),
@@ -32,7 +33,7 @@ export class ChurrascometroService {
   }
 
   httpGetBebidas(): Observable<Bebidas[]> {
-    return this.http.get<Bebidas[]>(`${this.API_URL}/bebidas`).pipe(
+    return this.http.get<Bebidas[]>(`${API_URL}/bebidas`).pipe(
       tap((bebidas) => {
         this.bebidas.set(bebidas);
       }),
@@ -41,7 +42,7 @@ export class ChurrascometroService {
   }
 
   httpCreateProduto(carne: any, endpoint: string): Observable<any> {
-    return this.http.post<any>(`${this.API_URL}/${endpoint}`, carne).pipe(
+    return this.http.post<any>(`${API_URL}/${endpoint}`, carne).pipe(
       tap((produto: any) => {
         this.produto.set(produto); 
       }),
@@ -50,7 +51,7 @@ export class ChurrascometroService {
   }
 
   httpGetProduto(id: string, endpoint: string): Observable<any> {
-    return this.http.get<any>(`${this.API_URL}/${endpoint}/${id}`).pipe(
+    return this.http.get<any>(`${API_URL}/${endpoint}/${id}`).pipe(
       tap((produto: any) => {
         this.produto.set(produto);
       }),
@@ -59,7 +60,7 @@ export class ChurrascometroService {
   }
 
   httpUpdateNomeProduto(id: string, nome: string, endpoint:string): Observable<any> {
-    return this.http.patch<any>(`${this.API_URL}/${endpoint}/${id}`, { 'nome': nome })
+    return this.http.patch<any>(`${API_URL}/${endpoint}/${id}`, { 'nome': nome })
     .pipe(
       tap((produto: any) => {
         this.produto.set(produto);
@@ -69,7 +70,7 @@ export class ChurrascometroService {
   }
 
   httpUpdateProduto(id: string, endpoint: string, produto: any): Observable<any> {
-    return this.http.put<any>(`${this.API_URL}/${endpoint}/${id}`, produto).pipe(
+    return this.http.put<any>(`${API_URL}/${endpoint}/${id}`, produto).pipe(
       tap((produto: any) => {
         this.produto.set(produto);
       }),
@@ -78,7 +79,7 @@ export class ChurrascometroService {
   }
 
   httpDeleteProduto(id: string, endpoint: string): Observable<any> {
-    return this.http.delete<void>(`${this.API_URL}/${endpoint}/${id}`).pipe(
+    return this.http.delete<void>(`${API_URL}/${endpoint}/${id}`).pipe(
       tap(() => {
         this.produto.set(null);
       }),
@@ -87,7 +88,7 @@ export class ChurrascometroService {
   }
 
   private handlerError(error: HttpErrorResponse): Observable<any> {
-    console.log('Ocorreu um erro: ' + error);
+    console.log('Ocorreu um erro: ', error);
     return throwError(() => error);
   }
 

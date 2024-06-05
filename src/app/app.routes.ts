@@ -44,5 +44,7 @@ export const routes: Routes = [
       },
     ],
   },
+  { path: 'unauthorized', component: NotFoundComponent },
+  { path: 'erro/:status', component: NotFoundComponent },
   { path: '**', component: NotFoundComponent },
 ];

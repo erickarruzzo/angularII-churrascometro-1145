@@ -10,16 +10,16 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class DetalheChurrascoComponent implements OnInit {
   paramId?: string = '';
-  @Input() set id(id: string) {
-    // console.log('ID', id);
-    this.paramId = id;
-  }
+  // @Input() set id(id: string) {
+  //   // console.log('ID', id);
+  //   this.paramId = id;
+  // }
   
   constructor(public router: ActivatedRoute) {}
   
   ngOnInit(): void {
-    // console.log('ID', this.router.snapshot.paramMap.get('id'));
-    // console.log('ID', this.router.snapshot.params['id']);
+    console.log(this.router.snapshot.params['id']);
+    console.log(this.router.snapshot.paramMap.get('id'));
     this.paramId = this.router.snapshot.paramMap.get('id')?.toString();
   }
 }
