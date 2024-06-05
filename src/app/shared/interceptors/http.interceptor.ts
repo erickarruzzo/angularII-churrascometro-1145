@@ -18,7 +18,7 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
     retry({ count: 3, delay: 1000 }),
     catchError((err: HttpErrorResponse) => {
       if (err.status === 401) {
-       console.log('Erro de autenticação')
+       console.log('Erro de autorização')
       }
       return throwError(() => err);
     })
