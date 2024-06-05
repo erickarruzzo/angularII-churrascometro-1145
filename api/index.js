@@ -161,7 +161,7 @@ app.post('/bebidas', (req, res) => {
 
 });
 
-const validateAndLogAlterationOrDeletion = (req, res, next) => {
+const validateAndLogAlterationOrDeletionBebida = (req, res, next) => {
 
     const urlID = req.params.id;
     const dateTime = new Date().toLocaleString('pt-br');
@@ -189,7 +189,7 @@ const validateAndLogAlterationOrDeletion = (req, res, next) => {
     next();
 }
 
-app.use('/bebidas/:id', validateAndLogAlterationOrDeletion);
+app.use('/bebidas/:id', validateAndLogAlterationOrDeletionBebida);
 
 app.get('/bebidas/:id', (req, res) => {
 
