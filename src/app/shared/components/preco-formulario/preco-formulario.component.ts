@@ -203,7 +203,7 @@ export class PrecoFormularioComponent implements OnInit {
       if (this.getCarnes() !== null && this.getCarnes().length > 0) {
         this.getCarnes().forEach((carne) => {
           switch (carne.nome) {
-            case 'picanha':
+            case 'Picanha':
               this.preco_picanha = carne.preco_kg;
               this.consumo_adulto_picanha = carne.consumo_medio_adulto_g;
               this.consumo_crianca_picanha = carne.consumo_medio_crianca_g;

@@ -5,12 +5,17 @@ import { ListaChurrascoComponent } from './pages/lista-churrasco/lista-churrasco
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { DetalheChurrascoComponent } from './pages/detalhe-churrasco/detalhe-churrasco.component';
 import { CriacaoProdutoComponent } from './pages/criacao-produto/criacao-produto.component';
+import { canActivateGuard } from './shared/guards/can-activate.guard';
+import { canActivateChildGuard } from './shared/guards/can-activate-child.guard';
+import { canMatchGuard } from './shared/guards/can-match.guard';
+import { canDeactivateGuard } from './shared/guards/can-deactivate.guard';
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent, title: 'Churrascometro - Home' },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   {
     path: 'churrascos',
+    canActivateChild: [canActivateChildGuard],
     children: [
       {
         path: '',
@@ -21,6 +26,7 @@ export const routes: Routes = [
         path: 'novo',
         component: CriacaoChurrascoComponent,
         title: 'Churrascometro - Novo churrasco',
+        canDeactivate: [canDeactivateGuard]
       },
       {
         path: ':id',
@@ -36,6 +42,7 @@ export const routes: Routes = [
         path: ':produto',
         component: CriacaoProdutoComponent,
         title: 'Churrascometro - Criação de Produtos',
+        canMatch: [canMatchGuard],
       },
       {
         path: ':produto/:id',
