@@ -1,13 +1,13 @@
-require('dotenv').config();
-const express = require('express');
-const jwt = require('jsonwebtoken');
-var cors = require('cors');
+require("dotenv").config();
+const express = require("express");
+const jwt = require("jsonwebtoken");
+var cors = require("cors");
 
 const app = express();
 
 const corsOptions = {
-  origin: ['http://localhost:4200','http://localhost:4201'],
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  origin: ["http://localhost:4200", "http://localhost:4201"],
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
   optionsSuccessStatus: 204,
 };
@@ -17,206 +17,266 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use((req, res, next) => {
-    console.log(req.url, req.params, req.body);
-    next();
-})
+  console.log(req.url, req.params, req.body);
+  next();
+});
 
-app.post('/login', (req, res) => {
+let blacklistedToken = [];
 
-    const { login, senha } = req.body;
-    const { DEFAULT_LOGIN, DEFAULT_PASSWORD, JWT_SECRET } = process.env;
-    if (login === DEFAULT_LOGIN && senha === DEFAULT_PASSWORD) {
-        const token = jwt.sign({ user: `${DEFAULT_LOGIN}` }, JWT_SECRET, { expiresIn: '1h' });
-        return res.json(token);
-    }
-    res.status = 401;
-    res.end();
+app.post("/login", (req, res) => {
+  const { login, senha } = req.body;
+  const { DEFAULT_LOGIN, DEFAULT_PASSWORD, JWT_SECRET } = process.env;
+  if (login === DEFAULT_LOGIN && senha === DEFAULT_PASSWORD) {
+    const token = jwt.sign({ user: `${DEFAULT_LOGIN}` }, JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    return res.json(token);
+  }
+  res.status = 401;
+  res.end();
 });
 
 const jwtValidation = (req, res, next) => {
-    try {
-        const { JWT_SECRET } = process.env;
-        const auth = req.headers.authorization;
-        const token = auth.replace('Bearer ', '');
-        if (auth) {
-            const decoded = jwt.verify(token, JWT_SECRET);
-            res.locals = { user: decoded.user };
-            console.info('JWT Middleware - validated token for user: ' + decoded.user);
-        }
-        else throw new Error("token not found");
-    }
-    catch (err) {
-        console.info('JWT Middleware - error validating token\n' + err);
-        res.sendStatus(401);
-        return res.end();
-    }
-    next();
+  try {
+    const { JWT_SECRET } = process.env;
+    const auth = req.headers.authorization;
+    const token = auth.replace("Bearer ", "");
+    if (auth && !blacklistedToken.includes(token)) {
+      const decoded = jwt.verify(token, JWT_SECRET);
+      res.locals = { user: decoded.user };
+      console.info(
+        "JWT Middleware - validated token for user: " + decoded.user
+      );
+    } else throw new Error("token not found");
+  } catch (err) {
+    console.info("JWT Middleware - error validating token\n" + err);
+    res.sendStatus(401);
+    return res.end();
+  }
+  next();
 };
 
 app.use(jwtValidation);
+
+app.get("/logout", (req, res) => {
+  try {
+    const token = req.header('Authorization').replace('Bearer ', '');
+    blacklistedToken.push(token);
+    res.status = 200;
+    res.end();
+  } catch (error) {
+    console.error("Error during logout:", error);
+  }
+});
 
 // CARNES
 
 let carnes = [];
 
-app.get('/carnes', (req, res) => {
-
-    res.json(carnes);
-    res.end();
-
+app.get("/carnes", (req, res) => {
+  res.json(carnes);
+  res.end();
 });
 
-app.post('/carnes', (req, res) => {
-
-    const { nome, tipo, preco_kg, consumo_medio_adulto_g, consumo_medio_crianca_g, id } = req.body;
-    if (nome && tipo && preco_kg && consumo_medio_adulto_g && consumo_medio_crianca_g && !id) {
-		const id = carnes.length + 1;
-        const carne = { nome, tipo, preco_kg, consumo_medio_adulto_g, consumo_medio_crianca_g, id: id };
-        carnes.push(carne);
-        res.status(201).json(carne);
-    }
-    else return res.sendStatus(400);
-
+app.post("/carnes", (req, res) => {
+  const {
+    nome,
+    tipo,
+    preco_kg,
+    consumo_medio_adulto_g,
+    consumo_medio_crianca_g,
+    id,
+  } = req.body;
+  if (
+    nome &&
+    tipo &&
+    preco_kg &&
+    consumo_medio_adulto_g &&
+    consumo_medio_crianca_g &&
+    !id
+  ) {
+    const id = carnes.length + 1;
+    const carne = {
+      nome,
+      tipo,
+      preco_kg,
+      consumo_medio_adulto_g,
+      consumo_medio_crianca_g,
+      id: id,
+    };
+    carnes.push(carne);
+    res.status(201).json(carne);
+  } else return res.sendStatus(400);
 });
 
 const validateAndLogAlterationOrDeletion = (req, res, next) => {
+  const urlID = req.params.id;
+  const dateTime = new Date().toLocaleString("pt-br");
 
-    const urlID = req.params.id;
-    const dateTime = new Date().toLocaleString('pt-br');
+  if (!urlID) return res.sendStatus(400);
 
-    if (!urlID) return res.sendStatus(400);
+  const carne = carnes.find((x) => x.id == urlID);
+  if (!carne) return res.sendStatus(404);
 
-    const carne = carnes.find(x => x.id == urlID);
-    if (!carne) return res.sendStatus(404);
+  if (req.method === "PUT") {
+    const {
+      nome,
+      tipo,
+      preco_kg,
+      consumo_medio_adulto_g,
+      consumo_medio_crianca_g,
+      id,
+    } = req.body;
+    if (urlID !== id)
+      return res.status(400).json({ error: "ids não correspondem" });
+    if (!(titulo && conteudo && lista && id)) return res.sendStatus(400);
+    console.info(`${dateTime} - carne ${urlID} - ${carne.nome} - Alterar`);
+  } else if (req.method === "DELETE") {
+    console.info(`${dateTime} - carne ${urlID} - ${carne.nome} - Remover`);
+  } else if (req.method === "GET") {
+    console.info(`${dateTime} - carne ${urlID} - ${carne.nome} - Pesquisar`);
+  }
 
-    if (req.method === 'PUT') {
-        const { nome, tipo, preco_kg, consumo_medio_adulto_g, consumo_medio_crianca_g, id } = req.body;
-        if (urlID !== id) return res.status(400).json({ error: 'ids não correspondem' });
-        if (!(titulo && conteudo && lista && id)) return res.sendStatus(400);
-        console.info(`${dateTime} - carne ${urlID} - ${carne.nome} - Alterar`);
-    }
+  next();
+};
 
-    else if (req.method === 'DELETE') {
-        console.info(`${dateTime} - carne ${urlID} - ${carne.nome} - Remover`);
-    }
-	
-	else if (req.method === 'GET') {
-        console.info(`${dateTime} - carne ${urlID} - ${carne.nome} - Pesquisar`);
-    }
+app.use("/carnes/:id", validateAndLogAlterationOrDeletion);
 
-    next();
-}
-
-app.use('/carnes/:id', validateAndLogAlterationOrDeletion);
-
-app.get('/carnes/:id', (req, res) => {
-
-	const urlID = req.params.id;
-    const carne = carnes.find(x => x.id == urlID);
-    res.json(carne);
-
+app.get("/carnes/:id", (req, res) => {
+  const urlID = req.params.id;
+  const carne = carnes.find((x) => x.id == urlID);
+  res.json(carne);
 });
 
-app.put('/carnes/:id', (req, res) => {
-    const { nome, tipo, preco_kg, consumo_medio_adulto_g, consumo_medio_crianca_g, id } = req.body;
-    const carne = carnes.find(x => x.id === id);
-    carne.nome = nome;
-    carne.tipo = tipo;
-    carne.preco_kg = preco_kg;
-	carne.consumo_medio_adulto_g = consumo_medio_adulto_g;
-	carne.consumo_medio_crianca_g = consumo_medio_crianca_g;
-    return res.status(200).json(carne);
+app.put("/carnes/:id", (req, res) => {
+  const {
+    nome,
+    tipo,
+    preco_kg,
+    consumo_medio_adulto_g,
+    consumo_medio_crianca_g,
+    id,
+  } = req.body;
+  const carne = carnes.find((x) => x.id === id);
+  carne.nome = nome;
+  carne.tipo = tipo;
+  carne.preco_kg = preco_kg;
+  carne.consumo_medio_adulto_g = consumo_medio_adulto_g;
+  carne.consumo_medio_crianca_g = consumo_medio_crianca_g;
+  return res.status(200).json(carne);
 });
 
-app.delete('/carnes/:id', (req, res) => {
+app.delete("/carnes/:id", (req, res) => {
+  const urlID = req.params.id;
+  carnes = carnes.filter((x) => x.id != urlID);
 
-    const urlID = req.params.id;
-    carnes = carnes.filter(x => x.id != urlID);
-	
-	console.log(carnes);
-    res.json(carnes);
+  console.log(carnes);
+  res.json(carnes);
 });
 
 // BEBIDAS
 
 let bebidas = [];
 
-app.get('/bebidas', (req, res) => {
-
-    res.json(bebidas);
-    res.end();
-
+app.get("/bebidas", (req, res) => {
+  res.json(bebidas);
+  res.end();
 });
 
-app.post('/bebidas', (req, res) => {
-
-    const { nome, tipo, preco_unidade, consumo_medio_adulto_ml, consumo_medio_crianca_ml, id } = req.body;
-    if (nome && tipo && preco_unidade && consumo_medio_adulto_ml && consumo_medio_crianca_ml && !id) {
-		const id = bebidas.length + 1;
-        const bebida = { nome, tipo, preco_unidade, consumo_medio_adulto_ml, consumo_medio_crianca_ml, id: id };
-        bebidas.push(bebida);
-        res.status(201).json(bebida);
-    }
-    else return res.sendStatus(400);
-
+app.post("/bebidas", (req, res) => {
+  const {
+    nome,
+    tipo,
+    preco_unidade,
+    consumo_medio_adulto_ml,
+    consumo_medio_crianca_ml,
+    id,
+  } = req.body;
+  if (
+    nome &&
+    tipo &&
+    preco_unidade &&
+    consumo_medio_adulto_ml &&
+    consumo_medio_crianca_ml &&
+    !id
+  ) {
+    const id = bebidas.length + 1;
+    const bebida = {
+      nome,
+      tipo,
+      preco_unidade,
+      consumo_medio_adulto_ml,
+      consumo_medio_crianca_ml,
+      id: id,
+    };
+    bebidas.push(bebida);
+    res.status(201).json(bebida);
+  } else return res.sendStatus(400);
 });
 
 const validateAndLogAlterationOrDeletionBebida = (req, res, next) => {
+  const urlID = req.params.id;
+  const dateTime = new Date().toLocaleString("pt-br");
 
-    const urlID = req.params.id;
-    const dateTime = new Date().toLocaleString('pt-br');
+  if (!urlID) return res.sendStatus(400);
 
-    if (!urlID) return res.sendStatus(400);
+  const bebida = bebidas.find((x) => x.id == urlID);
+  if (!bebida) return res.sendStatus(404);
 
-    const bebida = bebidas.find(x => x.id == urlID);
-    if (!bebida) return res.sendStatus(404);
+  if (req.method === "PUT") {
+    const {
+      nome,
+      tipo,
+      preco_unidade,
+      consumo_medio_adulto_ml,
+      consumo_medio_crianca_ml,
+      id,
+    } = req.body;
+    if (urlID !== id)
+      return res.status(400).json({ error: "ids não correspondem" });
+    if (!(titulo && conteudo && lista && id)) return res.sendStatus(400);
+    console.info(`${dateTime} - bebida ${urlID} - ${bebida.nome} - Alterar`);
+  } else if (req.method === "DELETE") {
+    console.info(`${dateTime} - bebida ${urlID} - ${bebida.nome} - Remover`);
+  } else if (req.method === "GET") {
+    console.info(`${dateTime} - bebida ${urlID} - ${bebida.nome} - Pesquisar`);
+  }
 
-    if (req.method === 'PUT') {
-        const { nome, tipo, preco_unidade, consumo_medio_adulto_ml, consumo_medio_crianca_ml, id } = req.body;
-        if (urlID !== id) return res.status(400).json({ error: 'ids não correspondem' });
-        if (!(titulo && conteudo && lista && id)) return res.sendStatus(400);
-        console.info(`${dateTime} - bebida ${urlID} - ${bebida.nome} - Alterar`);
-    }
+  next();
+};
 
-    else if (req.method === 'DELETE') {
-        console.info(`${dateTime} - bebida ${urlID} - ${bebida.nome} - Remover`);
-    }
-	
-	else if (req.method === 'GET') {
-        console.info(`${dateTime} - bebida ${urlID} - ${bebida.nome} - Pesquisar`);
-    }
+app.use("/bebidas/:id", validateAndLogAlterationOrDeletionBebida);
 
-    next();
-}
-
-app.use('/bebidas/:id', validateAndLogAlterationOrDeletionBebida);
-
-app.get('/bebidas/:id', (req, res) => {
-
-	const urlID = req.params.id;
-    const bebida = bebidas.find(x => x.id == urlID);
-    res.json(bebida);
-
+app.get("/bebidas/:id", (req, res) => {
+  const urlID = req.params.id;
+  const bebida = bebidas.find((x) => x.id == urlID);
+  res.json(bebida);
 });
 
-app.put('/bebidas/:id', (req, res) => {
-    const { nome, tipo, preco_unidade, consumo_medio_adulto_ml, consumo_medio_crianca_ml, id } = req.body;
-    const bebida = bebidas.find(x => x.id === id);
-    bebida.nome = nome;
-    bebida.tipo = tipo;
-    bebida.preco_unidade = preco_unidade;
-	bebida.consumo_medio_adulto_ml = consumo_medio_adulto_ml;
-	bebida.consumo_medio_crianca_ml = consumo_medio_crianca_ml;
-    return res.status(200).json(bebida);
+app.put("/bebidas/:id", (req, res) => {
+  const {
+    nome,
+    tipo,
+    preco_unidade,
+    consumo_medio_adulto_ml,
+    consumo_medio_crianca_ml,
+    id,
+  } = req.body;
+  const bebida = bebidas.find((x) => x.id === id);
+  bebida.nome = nome;
+  bebida.tipo = tipo;
+  bebida.preco_unidade = preco_unidade;
+  bebida.consumo_medio_adulto_ml = consumo_medio_adulto_ml;
+  bebida.consumo_medio_crianca_ml = consumo_medio_crianca_ml;
+  return res.status(200).json(bebida);
 });
 
-app.delete('/bebidas/:id', (req, res) => {
+app.delete("/bebidas/:id", (req, res) => {
+  const urlID = req.params.id;
+  bebidas = bebidas.filter((x) => x.id != urlID);
 
-    const urlID = req.params.id;
-    bebidas = bebidas.filter(x => x.id != urlID);
-	
-	console.log(bebidas);
-    res.json(bebidas);
+  console.log(bebidas);
+  res.json(bebidas);
 });
 
-app.listen(5000, () => console.log('listening on http://localhost:5000'));
+app.listen(5000, () => console.log("listening on http://localhost:5000"));

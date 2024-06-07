@@ -22,22 +22,11 @@ registerLocaleData(pt);
 })
 export class AppComponent {
   title = 'churrascometro';
-  user: string = 'letscode';
-  pass: string = 'lets@123';
 
-  constructor(private auth: LoginService, private storage: StorageService) {
-    this.login();
+
+  constructor() {
+    
   }
 
-  login() {
-    this.auth.login(this.user, this.pass).subscribe({
-      next: (res) => {
-        console.log('TOKEN', res);
-        this.storage.setToken(res);
-      },
-      error: (err) => {
-        console.log(err);
-      }
-    })
-  }
+  
 }

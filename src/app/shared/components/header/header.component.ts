@@ -3,7 +3,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { LoginService } from '../../services/login.service';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: 'app-header',
@@ -13,5 +15,34 @@ import { RouterLink } from '@angular/router';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
+  user: string = 'letscode';
+  pass: string = 'lets@123';
 
+  constructor(
+    public loginService: LoginService,
+    private storageService: StorageService,
+    private router: Router
+  ) {}
+
+  login() {
+    this.loginService.login(this.user, this.pass).subscribe({
+      next: (res) => {
+        console.log('TOKEN', res);
+        this.storageService.setToken(res);
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    })
+  }
+
+  logout() {
+    if (!this.loginService.isLoggedIn()) return;
+    this.loginService.logout().subscribe({
+      next: () => {
+        this.storageService.removeToken();
+        this.router.navigate(['/home']);
+      }, error: (err) => console.log(err)
+    })
+  }
 }

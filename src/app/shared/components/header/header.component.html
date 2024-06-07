@@ -7,11 +7,21 @@
       <mat-menu #menu="matMenu">
         <a mat-menu-item routerLink="churrascos/novo">Novo</a>
         <a mat-menu-item routerLink="churrascos">Lista</a>
+        @if (loginService.isLoggedIn()) {
+          <a mat-menu-item (click)="logout()">Sair</a>
+        } @else {
+          <a mat-menu-item (click)="login()">Entrar</a>
+        }
       </mat-menu>
     </menu>
     <menu class="hidden sm:flex">
       <a mat-menu-item routerLink="churrascos/novo">Novo</a>
       <a mat-menu-item routerLink="churrascos">Lista</a>
+      @if (loginService.isLoggedIn()) {
+        <a mat-menu-item (click)="logout()">Sair</a>
+      } @else {
+        <a mat-menu-item (click)="login()">Entrar</a>
+      }
     </menu>
     <figure routerLink="/home" class="flex items-center gap-4 md:flex-row-reverse cursor-pointer">
       <figcaption>Churrascometro</figcaption>
