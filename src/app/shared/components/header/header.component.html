@@ -5,7 +5,6 @@
         <mat-icon>menu</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
-        <a mat-menu-item class="p-3" routerLink="churrascos/novo">Novo</a>
         @if (loginService.isLoggedIn()) {
           <a mat-menu-item class="p-3" (click)="logout()">Sair</a>
         } @else {
@@ -16,7 +15,6 @@
       </mat-menu>
     </menu>
     <menu class="hidden sm:flex">
-      <a mat-menu-item class="p-3" routerLink="churrascos/novo">Novo</a>
       @if (loginService.isLoggedIn()) {
         <a mat-menu-item class="p-3" (click)="logout()">Sair</a>
       } @else {
