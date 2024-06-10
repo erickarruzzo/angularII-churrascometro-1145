@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Carnes } from '../../models/carnes.interface';
 import { Router } from '@angular/router';
 
 @Component({
@@ -26,13 +25,7 @@ export class ProdutoFormularioComponent implements OnInit {
   @Input() idRoute!: string;
   @Input() produtoRoute: string = 'carnes';
 
-  campos = [
-    { nome: 'nome', tipo: 'text', placeholder: 'Nome' },
-    { nome: 'tipo', tipo: 'text', placeholder: 'Tipo' },
-    { nome: 'preco_kg', tipo: 'number', placeholder: 'Preço por kg' },
-    { nome: 'consumo_medio_adulto_g', tipo: 'number', placeholder: 'Consumo médio por adulto (g)' },
-    { nome: 'consumo_medio_crianca_g', tipo: 'number', placeholder: 'Consumo médio por criança (g)' },
-  ];
+  campos!: any[];
 
   form!: FormGroup;
   // getProduto = this.servico.getProduto;
@@ -53,13 +46,33 @@ export class ProdutoFormularioComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.formBuilder.group({});
 
+    switch (this.produtoRoute) {
+      case 'carnes':
+        this.campos = [
+          { nome: 'nome', tipo: 'text', placeholder: 'Nome' },
+          { nome: 'tipo', tipo: 'text', placeholder: 'Tipo' },
+          { nome: 'preco_kg', tipo: 'number', placeholder: 'Preço por kg' },
+          { nome: 'consumo_medio_adulto_g', tipo: 'number', placeholder: 'Consumo médio por adulto (g)' },
+          { nome: 'consumo_medio_crianca_g', tipo: 'number', placeholder: 'Consumo médio por criança (g)' },
+        ];
+        break;
+      case 'bebidas':
+        this.campos = [
+          { nome: 'nome', tipo: 'text', placeholder: 'Nome' },
+          { nome: 'tipo', tipo: 'text', placeholder: 'Tipo' },
+          { nome: 'preco_unidade', tipo: 'number', placeholder: 'Preço por unidade' },
+          { nome: 'consumo_medio_adulto_ml', tipo: 'number', placeholder: 'Consumo médio por adulto (ml)' },
+          { nome: 'consumo_medio_crianca_ml', tipo: 'number', placeholder: 'Consumo médio por criança (ml)' },
+        ]
+    }
+
     this.campos.forEach((campo) => {
       this.addFormControl(campo.nome, [Validators.required])
     });
 
     if (this.idRoute) {
       console.log('ID', this.idRoute);
-      this.servico.httpGetProduto(this.idRoute, 'carnes').subscribe();
+      this.servico.httpGetProduto(this.idRoute, this.produtoRoute).subscribe();
     }
   }
 
@@ -72,7 +85,7 @@ export class ProdutoFormularioComponent implements OnInit {
       const produto = this.getProduto();
 
       if (produto) {
-        this.servico.httpCreateProduto(produto, 'carnes').subscribe({
+        this.servico.httpCreateProduto(produto, this.produtoRoute).subscribe({
           next: (retorno) => {
             this.form.reset();
             console.log(retorno);
@@ -86,15 +99,8 @@ export class ProdutoFormularioComponent implements OnInit {
   editar() {
     if (this.form.valid) {
       const produto = this.getProduto();
-      // this.servico.httpUpdateNomeProduto(this.idRoute, nome, 'carnes')
-      // .subscribe({
-      //   next: (retorno) => {
-      //     console.log('Editado', retorno);
-      //     this.route.navigate(['/home']);
-      //   }, error: (error) => console.error(error)
-      // });
       if (produto) {
-        this.servico.httpUpdateProduto(this.idRoute, 'carnes', produto).subscribe({
+        this.servico.httpUpdateProduto(this.idRoute, this.produtoRoute, produto).subscribe({
           next: (retorno: any) => {
             console.log('Editado', retorno);
             this.route.navigate(['/home']);
@@ -107,7 +113,7 @@ export class ProdutoFormularioComponent implements OnInit {
 
   deletar() {
     if (this.idRoute) {
-      this.servico.httpDeleteProduto(this.idRoute, 'carnes').subscribe({
+      this.servico.httpDeleteProduto(this.idRoute, this.produtoRoute).subscribe({
         next: () => {
           console.log('Apagado');
           this.form.reset();

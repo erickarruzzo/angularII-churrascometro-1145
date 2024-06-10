@@ -104,14 +104,14 @@
               </mat-checkbox>
             }
             @case("Vegetariano") {
-              @if (carne.tipo === "Vegetariano" || carne.tipo === "Vegano") {
+              @if (carne.tipo === "vegetariano" || carne.tipo === "vegano") {
                 <mat-checkbox [formControlName]="carne.value">
                   {{ carne.label }}
                 </mat-checkbox>   
               }
             }
             @case("Vegano") {
-              @if (carne.tipo === "Vegano") {
+              @if (carne.tipo === "vegano") {
                 <mat-checkbox [formControlName]="carne.value">
                   {{ carne.label }}
                 </mat-checkbox>   
@@ -176,110 +176,54 @@
       </tbody>
     </table>
 
-    <h2 class="text-xl font-bold m-4">Carnes</h2>
-    <table class="min-w-full bg-white table-fixed">
-      <thead>
-        <tr>
-          <th class="py-2 px-4 border-b text-left">Descrição</th>
-          <th class="py-2 px-4 border-b text-left">Valor Total</th>
-        </tr>
-      </thead>
-      <tbody>
-        @if (valor_total_picanha() > 0) {
-          <tr>
-            <td class="py-2 px-4 border-b text-left">Picanha</td>
-            <td class="py-2 px-4 border-b text-left">
-              {{ valor_total_picanha() | currency : "BRL" }}
-            </td>
-          </tr>  
-        }
-        @if (valor_total_costela() > 0) {
-          <tr>
-            <td class="py-2 px-4 border-b text-left">Costela</td>
-            <td class="py-2 px-4 border-b text-left">
-              {{ valor_total_costela() | currency : "BRL" }}
-            </td>
-          </tr>
-        }
-        @if (valor_total_linguica() > 0) {
-          <tr>
-            <td class="py-2 px-4 border-b text-left">Linguiça</td>
-            <td class="py-2 px-4 border-b text-left">
-              {{ valor_total_linguica() | currency : "BRL" }}
-            </td>
-          </tr>
-        }
-        @if (valor_total_frango() > 0) {
-          <tr>
-            <td class="py-2 px-4 border-b text-left">Frango</td>
-            <td class="py-2 px-4 border-b text-left">
-              {{ valor_total_frango() | currency : "BRL" }}
-            </td>
-          </tr>
-        }
-        @if (valor_total_queijo() > 0) {
-          <tr>
-            <td class="py-2 px-4 border-b text-left">Queijo</td>
-            <td class="py-2 px-4 border-b text-left">
-              {{ valor_total_queijo() | currency : "BRL" }}
-            </td>
-          </tr>
-        }
-        @if (valor_total_abacaxi() > 0) {
-          <tr>
-            <td class="py-2 px-4 border-b text-left">Abacaxi</td>
-            <td class="py-2 px-4 border-b text-left">
-              {{ valor_total_abacaxi() | currency : "BRL" }}
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
+    @if (getCarnes()) {
+      <h2 class="text-xl font-bold m-4">Carnes</h2>
+    
 
-    <h2 class="text-xl font-bold m-4">Bebidas</h2>
-    <table class="min-w-full bg-white table-fixed">
-      <thead>
-        <tr>
-          <th class="py-2 px-4 border-b text-left">Descrição</th>
-          <th class="py-2 px-4 border-b text-left">Valor Total</th>
-        </tr>
-      </thead>
-      <tbody>
-        @if (valor_total_cerveja() > 0) {
+      <table class="min-w-full bg-white table-fixed">
+        <thead>
           <tr>
-            <td class="py-2 px-4 border-b text-left">Cerveja</td>
-            <td class="py-2 px-4 border-b text-left">
-              {{ valor_total_cerveja() | currency : "BRL" }}
-            </td>
-          </tr>  
-        }
-        @if (valor_total_refrigerante() > 0) {
-          <tr>
-            <td class="py-2 px-4 border-b text-left">Refrigerante</td>
-            <td class="py-2 px-4 border-b text-left">
-              {{ valor_total_refrigerante() | currency : "BRL" }}
-            </td>
+            <th class="py-2 px-4 border-b text-left">Descrição</th>
+            <th class="py-2 px-4 border-b text-left">Valor Total</th>
           </tr>
-        }
-        @if (valor_total_suco() > 0) {
+        </thead>
+        <tbody>
+          @for (carne of getCarnes(); track carne.id) {
+            <tr>
+              <td class="py-2 px-4 border-b text-left">{{ carne.nome }}</td>
+              <td class="py-2 px-4 border-b text-left">
+                {{ calculaPreco(adultos_total, criancas_total, carne.consumo_medio_adulto_g, carne.consumo_medio_crianca_g, carne.preco_kg) | currency : "BRL" }}
+              </td>
+            </tr>  
+          }
+        </tbody>
+      </table>
+    }
+
+    @if (getBebidas()) {
+      <h2 class="text-xl font-bold m-4">Bebidas</h2>
+    
+
+      <table class="min-w-full bg-white table-fixed">
+        <thead>
           <tr>
-            <td class="py-2 px-4 border-b text-left">Suco</td>
-            <td class="py-2 px-4 border-b text-left">
-              {{ valor_total_suco() | currency : "BRL" }}
-            </td>
+            <th class="py-2 px-4 border-b text-left">Descrição</th>
+            <th class="py-2 px-4 border-b text-left">Valor Total</th>
           </tr>
-        }
-        @if (valor_total_agua() > 0) {
-          <tr>
-            <td class="py-2 px-4 border-b text-left">Água</td>
-            <td class="py-2 px-4 border-b text-left">
-              {{ valor_total_agua() | currency : "BRL" }}
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-    <h3 class="flex justify-end text-xl font-bold m-4">Valor Total: {{ valor_total() | currency : "BRL" }}</h3>
+        </thead>
+        <tbody>
+          @for (bebida of getBebidas(); track bebida.id) {
+            <tr>
+              <td class="py-2 px-4 border-b text-left">{{ bebida.nome | uppercase }}</td>
+              <td class="py-2 px-4 border-b text-left">
+                {{ calculaPreco(adultos_total, criancas_total, bebida.consumo_medio_adulto_ml, bebida.consumo_medio_crianca_ml, bebida.preco_unidade) | currency : "BRL" }}
+              </td>
+            </tr>  
+          }
+        </tbody>
+      </table>
+    }
+    <h3 class="flex justify-end text-xl font-bold m-4">Valor Total: {{ calculaValorTotal() | currency : "BRL" }}</h3>
   </div>
 </section>
 
@@ -289,80 +233,26 @@
   </h1>
 
   <div class="grid grid-cols-2 gap-4">
-    <div>
-      <div class="bg-white shadow-md rounded p-4 mb-4">
-        <h2 class="text-xl font-semibold mb-2">Picanha</h2>
-        <p>Preço por kg: {{ preco_picanha | currency : "BRL" }}</p>
-        <p>Consumo médio por adulto (g): {{ consumo_adulto_picanha }}</p>
-        <p>Consumo médio por criança (g): {{ consumo_crianca_picanha }}</p>
-      </div>
+    @if(getCarnes()) {
+      @for (carne of getCarnes(); track carne.id) {
+        <div class="bg-white shadow-md rounded p-4 mb-4">
+          <h2 class="text-xl font-semibold mb-2">{{ carne.nome | uppercase }}</h2>
+          <p>Preço por kg: {{ carne.preco_kg| currency : "BRL" }}</p>
+          <p>Consumo médio por adulto (g): {{ carne.consumo_medio_adulto_g }}</p>
+          <p>Consumo médio por criança (g): {{ carne.consumo_medio_crianca_g }}</p>
+        </div>
+      }
+    }
 
-      <div class="bg-white shadow-md rounded p-4 mb-4">
-        <h2 class="text-xl font-semibold mb-2">Costela</h2>
-        <p>Preço por kg: {{ preco_costela | currency : "BRL" }}</p>
-        <p>Consumo médio por adulto (g): {{ consumo_adulto_costela }}</p>
-        <p>Consumo médio por criança (g): {{ consumo_crianca_costela }}</p>
-      </div>
-
-      <div class="bg-white shadow-md rounded p-4 mb-4">
-        <h2 class="text-xl font-semibold mb-2">Linguiça</h2>
-        <p>Preço por kg: {{ preco_linguica | currency : "BRL" }}</p>
-        <p>Consumo médio por adulto (g): {{ consumo_adulto_linguica }}</p>
-        <p>Consumo médio por criança (g): {{ consumo_crianca_linguica }}</p>
-      </div>
-
-      <div class="bg-white shadow-md rounded p-4 mb-4">
-        <h2 class="text-xl font-semibold mb-2">Frango</h2>
-        <p>Preço por kg: {{ preco_frango | currency : "BRL" }}</p>
-        <p>Consumo médio por adulto (g): {{ consumo_adulto_frango }}</p>
-        <p>Consumo médio por criança (g): {{ consumo_crianca_frango }}</p>
-      </div>
-
-      <div class="bg-white shadow-md rounded p-4 mb-4">
-        <h2 class="text-xl font-semibold mb-2">Queijo</h2>
-        <p>Preço por kg: {{ preco_queijo | currency : "BRL" }}</p>
-        <p>Consumo médio por adulto (g): {{ consumo_adulto_queijo }}</p>
-        <p>Consumo médio por criança (g): {{ consumo_crianca_queijo }}</p>
-      </div>
-
-      <div class="bg-white shadow-md rounded p-4 mb-4">
-        <h2 class="text-xl font-semibold mb-2">Abacaxi</h2>
-        <p>Preço por kg: {{ preco_abacaxi | currency : "BRL" }}</p>
-        <p>Consumo médio por adulto (g): {{ consumo_adulto_abacaxi }}</p>
-        <p>Consumo médio por criança (g): {{ consumo_crianca_abacaxi }}</p>
-      </div>
-    </div>
-
-    <div>
-      <div class="bg-white shadow-md rounded p-4 mb-4">
-        <h2 class="text-xl font-semibold mb-2">Cerveja</h2>
-        <p>Preço por unidade: {{ preco_cerveja | currency : "BRL" }}</p>
-        <p>Consumo médio por adulto (ml): {{ consumo_adulto_cerveja }}</p>
-        <p>Consumo médio por criança (ml): 0</p>
-      </div>
-
-      <div class="bg-white shadow-md rounded p-4 mb-4">
-        <h2 class="text-xl font-semibold mb-2">Refrigerante</h2>
-        <p>Preço por unidade: {{ preco_refrigerante | currency : "BRL" }}</p>
-        <p>Consumo médio por adulto (ml): {{ consumo_adulto_refrigerante }}</p>
-        <p>
-          Consumo médio por criança (ml): {{ consumo_crianca_refrigerante }}
-        </p>
-      </div>
-
-      <div class="bg-white shadow-md rounded p-4 mb-4">
-        <h2 class="text-xl font-semibold mb-2">Água</h2>
-        <p>Preço por unidade: {{ preco_agua | currency : "BRL" }}</p>
-        <p>Consumo médio por adulto (ml): {{ consumo_adulto_agua }}</p>
-        <p>Consumo médio por criança (ml): {{ consumo_crianca_agua }}</p>
-      </div>
-
-      <div class="bg-white shadow-md rounded p-4 mb-4">
-        <h2 class="text-xl font-semibold mb-2">Suco</h2>
-        <p>Preço por unidade: {{ preco_suco | currency : "BRL" }}</p>
-        <p>Consumo médio por adulto (ml): {{ consumo_adulto_suco }}</p>
-        <p>Consumo médio por criança (ml): {{ consumo_crianca_suco }}</p>
-      </div>
-    </div>
+    @if(getBebidas()) {
+      @for (bebida of getBebidas(); track bebida.id) {
+        <div class="bg-white shadow-md rounded p-4 mb-4">
+          <h2 class="text-xl font-semibold mb-2">{{ bebida.nome }}</h2>
+          <p>Preço por unidade: {{ bebida.preco_unidade | currency : "BRL" }}</p>
+          <p>Consumo médio por adulto (ml): {{ bebida.consumo_medio_adulto_ml }}</p>
+          <p>Consumo médio por criança (ml): {{ bebida.consumo_medio_crianca_ml }}</p>
+        </div>
+      }
+    }
   </div>
 </div>
