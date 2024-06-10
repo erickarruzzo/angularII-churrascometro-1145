@@ -247,7 +247,7 @@
     @if(getBebidas()) {
       @for (bebida of getBebidas(); track bebida.id) {
         <div class="bg-white shadow-md rounded p-4 mb-4">
-          <h2 class="text-xl font-semibold mb-2">{{ bebida.nome }}</h2>
+          <h2 class="text-xl font-semibold mb-2">{{ bebida.nome | uppercase }}</h2>
           <p>Preço por unidade: {{ bebida.preco_unidade | currency : "BRL" }}</p>
           <p>Consumo médio por adulto (ml): {{ bebida.consumo_medio_adulto_ml }}</p>
           <p>Consumo médio por criança (ml): {{ bebida.consumo_medio_crianca_ml }}</p>

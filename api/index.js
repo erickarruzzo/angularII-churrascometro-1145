@@ -210,7 +210,6 @@ app.post("/bebidas", (req, res) => {
     tipo &&
     preco_unidade &&
     consumo_medio_adulto_ml &&
-    consumo_medio_crianca_ml &&
     !id
   ) {
     const id = bebidas.length + 1;
