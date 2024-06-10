@@ -17,9 +17,9 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
   });
 
   return next(req).pipe(
-    retry({ count: 2, delay: 1000 }),
+    retry({ count: 2, delay: 100 }),
     catchError((err: HttpErrorResponse) => {
-      router.navigate(['/error/', err.status], { queryParams: { message: err.message } });
+      router.navigate(['/error/', err.status], { queryParams: { message: err.statusText } });
       return throwError(() => err);
     })
   );

@@ -90,7 +90,7 @@ export class ChurrascometroService {
 
   private handlerError(error: HttpErrorResponse): Observable<any> {
     console.log('Ocorreu um erro: ', error);
-    this.router.navigate(['/error/', error.status], { queryParams: { message: error.message }});
+    this.router.navigate(['/error/', error.status], { queryParams: { message: error.statusText }});
     return throwError(() => error);
   }
 
