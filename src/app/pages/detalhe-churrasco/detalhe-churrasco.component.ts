@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -9,7 +8,7 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './detalhe-churrasco.component.html',
   styleUrl: './detalhe-churrasco.component.scss'
 })
-export class DetalheChurrascoComponent implements OnInit {
+export default class DetalheChurrascoComponent implements OnInit {
   paramId?: string = '';
   // @Input() set id(id: string) {
   //   // console.log('ID', id);

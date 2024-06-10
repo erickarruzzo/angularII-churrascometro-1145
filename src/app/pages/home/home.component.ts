@@ -1,8 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { PrecoFormularioComponent } from '../../shared/components/preco-formulario/preco-formulario.component';
 import { ScrollService } from '../../shared/services/scroll.service';
 import { RouterLink } from '@angular/router';
+import { StorageService } from '../../shared/services/storage.service';
 
 @Component({
   selector: 'app-home',
@@ -11,10 +12,19 @@ import { RouterLink } from '@angular/router';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent {
-  welcomeMessage: string = 'Bem-vindo ao Churrascômetro!'
+export default class HomeComponent {
+  usuario = this.storageService.user.asReadonly();
+  welcomeMessage = `Bem-vindo ao Churrascômetro!`;
 
   // #scrollService = inject(ScrollService);
 
-  constructor() { }
+  constructor(public storageService: StorageService) {
+    effect(() => {
+      if (this.usuario()) {
+        this.welcomeMessage = `Bem-vindo ao Churrascômetro ${ this.storageService.user() }!`;
+      } else {
+        this.welcomeMessage = `Bem-vindo ao Churrascômetro!`;
+      }
+    })
+   }
 }

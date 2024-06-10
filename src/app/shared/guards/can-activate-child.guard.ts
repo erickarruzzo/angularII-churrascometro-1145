@@ -11,6 +11,6 @@ export const canActivateChildGuard: CanActivateChildFn = (childRoute, state) => 
     return true;
   }
   console.log('Acesso negado')
-  router.navigate(['/home']);
+  router.navigate(['/not-found']);
   return false;
 };

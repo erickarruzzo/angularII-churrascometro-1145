@@ -23,4 +23,8 @@ export class LoginService {
   isLoggedIn(): boolean {
     return this.storage.getToken() ? true : false;
   }
+
+  isAdmin(): boolean {
+    return this.storage.getPerfil() === 'admin';
+  }
 }

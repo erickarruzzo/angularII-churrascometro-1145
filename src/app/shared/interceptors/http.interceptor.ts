@@ -19,11 +19,7 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     retry({ count: 2, delay: 1000 }),
     catchError((err: HttpErrorResponse) => {
-      if (err.status === 401) {
-        router.navigate(['/unauthorized']);
-      } else if (err.status === 404) {
-        router.navigate(['/not-found']);
-      }
+      router.navigate(['/error/', err.status], { queryParams: { message: err.message } });
       return throwError(() => err);
     })
   );

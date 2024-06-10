@@ -9,7 +9,7 @@ import { ScrollService } from '../../shared/services/scroll.service';
   templateUrl: './criacao-churrasco.component.html',
   styleUrl: './criacao-churrasco.component.scss'
 })
-export class CriacaoChurrascoComponent {
+export default class CriacaoChurrascoComponent {
   condition: boolean = true;
 
   constructor(private scrollService: ScrollService) { }

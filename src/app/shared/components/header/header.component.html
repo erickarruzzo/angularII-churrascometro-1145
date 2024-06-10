@@ -10,6 +10,8 @@
         @if (loginService.isLoggedIn()) {
           <a mat-menu-item (click)="logout()">Sair</a>
         } @else {
+          <input type="text" matInput [(ngModel)]="user" placeholder="Usuário" />
+          <input type="password" matInput [(ngModel)]="pass" placeholder="Senha" />
           <a mat-menu-item (click)="login()">Entrar</a>
         }
       </mat-menu>
@@ -20,6 +22,8 @@
       @if (loginService.isLoggedIn()) {
         <a mat-menu-item (click)="logout()">Sair</a>
       } @else {
+        <input class="m-1" type="text" matInput [(ngModel)]="user" placeholder="Usuário" />
+        <input class="m-1" type="password" matInput [(ngModel)]="pass" placeholder="Senha" />
         <a mat-menu-item (click)="login()">Entrar</a>
       }
     </menu>

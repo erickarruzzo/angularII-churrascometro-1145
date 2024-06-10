@@ -25,14 +25,27 @@ let blacklistedToken = [];
 
 app.post("/login", (req, res) => {
   const { login, senha } = req.body;
-  const { DEFAULT_LOGIN, DEFAULT_PASSWORD, JWT_SECRET } = process.env;
+  const { DEFAULT_LOGIN, DEFAULT_PASSWORD, JWT_SECRET, ADMIN_LOGIN, ADMIN_PASSWORD } = process.env;
   if (login === DEFAULT_LOGIN && senha === DEFAULT_PASSWORD) {
     const token = jwt.sign({ user: `${DEFAULT_LOGIN}` }, JWT_SECRET, {
       expiresIn: "1h",
     });
-    return res.json(token);
+    return res.json({
+      user: `${DEFAULT_LOGIN}`,
+      perfil: 'normal',
+      token: token,
+    });
+  } else if (login === ADMIN_LOGIN && senha === ADMIN_PASSWORD) {
+    const token = jwt.sign({ user: `${ADMIN_LOGIN}` }, JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    return res.json({
+      user: `${ADMIN_LOGIN}`,
+      perfil: 'admin',
+      token: token,
+    });
   }
-  res.status = 401;
+  res.sendStatus(401);
   res.end();
 });
 

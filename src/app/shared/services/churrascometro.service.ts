@@ -4,6 +4,7 @@ import { Observable, catchError, map, tap, throwError } from 'rxjs';
 import { Carnes } from '../models/carnes.interface';
 import { Bebidas } from '../models/bebidas.interface';
 import { API_URL } from '../models/constants/constants';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,7 @@ export class ChurrascometroService {
   private produto = signal<any | null>(null);
   public getProduto = this.produto.asReadonly();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   httpGetCarnes(): Observable<Carnes[]> {
     return this.http.get<Carnes[]>(`${API_URL}/carnes`).pipe(
@@ -89,6 +90,7 @@ export class ChurrascometroService {
 
   private handlerError(error: HttpErrorResponse): Observable<any> {
     console.log('Ocorreu um erro: ', error);
+    this.router.navigate(['/error/', error.status], { queryParams: { message: error.message }});
     return throwError(() => error);
   }
 

@@ -1,60 +1,34 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './pages/home/home.component';
-import { CriacaoChurrascoComponent } from './pages/criacao-churrasco/criacao-churrasco.component';
-import { ListaChurrascoComponent } from './pages/lista-churrasco/lista-churrasco.component';
-import { NotFoundComponent } from './pages/not-found/not-found.component';
-import { DetalheChurrascoComponent } from './pages/detalhe-churrasco/detalhe-churrasco.component';
-import { CriacaoProdutoComponent } from './pages/criacao-produto/criacao-produto.component';
-import { canActivateGuard } from './shared/guards/can-activate.guard';
 import { canActivateChildGuard } from './shared/guards/can-activate-child.guard';
 import { canMatchGuard } from './shared/guards/can-match.guard';
-import { canDeactivateGuard } from './shared/guards/can-deactivate.guard';
-import { canActivate2Guard } from './shared/guards/can-activate-2.guard';
 
 export const routes: Routes = [
-  { path: 'home', component: HomeComponent, title: 'Churrascometro - Home' },
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { 
+    path: 'home',
+    loadComponent: () => import('./pages/home/home.component'),
+    title: 'Churrascometro - Home' 
+  },
+  { 
+    path: '',
+    redirectTo: '/home',
+    pathMatch: 'full' 
+  },
   {
     path: 'churrascos',
     canActivateChild: [canActivateChildGuard],
-    children: [
-      {
-        path: '',
-        component: ListaChurrascoComponent,
-        title: 'Churrascometro - Lista de churrasco',
-      },
-      {
-        path: 'novo',
-        component: CriacaoChurrascoComponent,
-        title: 'Churrascometro - Novo churrasco'
-      },
-      {
-        path: ':id',
-        component: DetalheChurrascoComponent,
-        title: 'Churrascometro - Detalhe de Churrasco',
-        canDeactivate: [canDeactivateGuard],
-        // canMatch: [canMatchGuard],
-        // canActivate: [canActivateGuard, canActivate2Guard],
-      },
-    ],
+    loadChildren: () => import('./churrasco.routes').then(r => r.ChurrascoRoutes)
   },
   {
     path: 'produtos',
     canMatch: [canMatchGuard],
-    children: [
-      {
-        path: ':produto',
-        component: CriacaoProdutoComponent,
-        title: 'Churrascometro - Criação de Produtos',
-      },
-      {
-        path: ':produto/:id',
-        component: CriacaoProdutoComponent,
-        title: 'Churrascometro - Edição de Produtos',
-      },
-    ],
+    loadChildren: () => import('./produto.routes').then(r => r.ProdutoRoutes)
   },
-  { path: 'unauthorized', component: NotFoundComponent },
-  { path: 'erro/:status', component: NotFoundComponent },
-  { path: '**', component: NotFoundComponent },
+  { 
+    path: 'error/:code',
+    loadComponent: () => import('./pages/error/error.component') 
+  },
+  { 
+    path: '**', 
+    loadComponent: () => import('./pages/not-found/not-found.component') 
+  },
 ];
