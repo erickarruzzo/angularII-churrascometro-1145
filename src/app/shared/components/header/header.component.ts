@@ -6,17 +6,18 @@ import { MatMenuModule } from '@angular/material/menu';
 import { Router, RouterLink } from '@angular/router';
 import { LoginService } from '../../services/login.service';
 import { StorageService } from '../../services/storage.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, RouterLink],
+  imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatMenuModule, RouterLink, FormsModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-  user: string = 'letscode';
-  pass: string = 'lets@123';
+  user!: string;
+  pass!: string;
 
   constructor(
     public loginService: LoginService,
@@ -27,8 +28,8 @@ export class HeaderComponent {
   login() {
     this.loginService.login(this.user, this.pass).subscribe({
       next: (res) => {
-        console.log('TOKEN', res);
-        this.storageService.setToken(res);
+        console.log('Resposta Backend', res);
+        this.storageService.setToken(res.token);
       },
       error: (err) => {
         console.log(err);

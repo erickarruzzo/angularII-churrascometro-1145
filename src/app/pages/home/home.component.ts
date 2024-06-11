@@ -11,7 +11,7 @@ import { RouterLink } from '@angular/router';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent {
+export default class HomeComponent {
   welcomeMessage: string = 'Bem-vindo ao Churrascômetro!'
 
   // #scrollService = inject(ScrollService);

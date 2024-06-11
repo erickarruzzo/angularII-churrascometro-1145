@@ -10,7 +10,7 @@ import { ChurrascometroService } from '../../shared/services/churrascometro.serv
   templateUrl: './criacao-produto.component.html',
   styleUrl: './criacao-produto.component.scss'
 })
-export class CriacaoProdutoComponent {
+export default class CriacaoProdutoComponent {
 
   paramID!: string;
   paramProduto!: string;

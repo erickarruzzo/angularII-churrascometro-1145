@@ -5,21 +5,21 @@
         <mat-icon>menu</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
-        <a mat-menu-item routerLink="churrascos/novo">Novo</a>
-        <a mat-menu-item routerLink="churrascos">Lista</a>
         @if (loginService.isLoggedIn()) {
           <a mat-menu-item (click)="logout()">Sair</a>
         } @else {
+          <input type="text" matInput [(ngModel)]="user" placeholder="Usuário" />
+          <input type="password" matInput [(ngModel)]="pass" placeholder="Senha" />
           <a mat-menu-item (click)="login()">Entrar</a>
         }
       </mat-menu>
     </menu>
     <menu class="hidden sm:flex">
-      <a mat-menu-item routerLink="churrascos/novo">Novo</a>
-      <a mat-menu-item routerLink="churrascos">Lista</a>
       @if (loginService.isLoggedIn()) {
         <a mat-menu-item (click)="logout()">Sair</a>
       } @else {
+        <input class="mr-2" type="text" matInput color="primary" [(ngModel)]="user" placeholder="Usuário" />
+        <input class="mr-2" type="password" matInput color="primary" [(ngModel)]="pass" placeholder="Senha" />
         <a mat-menu-item (click)="login()">Entrar</a>
       }
     </menu>
