@@ -1,9 +1,9 @@
 <form [formGroup]="form" class="flex flex-col m-10">
     <h2 class="text-xl font-bold mb-4">
         @if (idRoute) {
-            Edição de Carne
+            Edição de {{ produtoRoute | titlecase }}
         } @else {
-            Criação de Carne
+            Criação de {{ produtoRoute | titlecase }}
         }
     </h2>
     @for (campo of campos; track campo.nome) {

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { API_URL, HTTP_OPTIONS } from '../models/constants/constants';
+import { ADMIN_GROUP, API_URL, HTTP_OPTIONS, NORMAL_GROUP } from '../models/constants/constants';
 import { StorageService } from './storage.service';
 
 @Injectable({
@@ -22,5 +22,15 @@ export class LoginService {
 
   isLoggedIn(): boolean {
     return this.storage.getToken() ? true : false;
+  }
+
+  isAdmin(): boolean {
+    return this.storage.getPerfil() == ADMIN_GROUP; 
+    // this.storage.getPerfil() == 'admin'
+  }
+
+  isNormal(): boolean {
+    return this.storage.getPerfil() == NORMAL_GROUP;
+    // this.storage.getPerfil() == 'normal'
   }
 }

@@ -29,7 +29,7 @@ export class HeaderComponent {
     this.loginService.login(this.user, this.pass).subscribe({
       next: (res) => {
         console.log('Resposta Backend', res);
-        this.storageService.setToken(res.token);
+        this.storageService.doLogin(res.token, res.user, res.perfil);
       },
       error: (err) => {
         console.log(err);
@@ -41,7 +41,7 @@ export class HeaderComponent {
     if (!this.loginService.isLoggedIn()) return;
     this.loginService.logout().subscribe({
       next: () => {
-        this.storageService.removeToken();
+        this.storageService.doLogout();
         this.router.navigate(['/home']);
       }, error: (err) => console.log(err)
     })

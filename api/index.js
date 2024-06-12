@@ -123,6 +123,7 @@ app.post("/carnes", (req, res) => {
 });
 
 const validateAndLogAlterationOrDeletion = (req, res, next) => {
+  console.info('params', req.params);
   const urlID = req.params.id;
   const dateTime = new Date().toLocaleString("pt-br");
 
@@ -132,17 +133,15 @@ const validateAndLogAlterationOrDeletion = (req, res, next) => {
   if (!carne) return res.sendStatus(404);
 
   if (req.method === "PUT") {
+    console.info('body', req.body);
     const {
       nome,
       tipo,
       preco_kg,
       consumo_medio_adulto_g,
-      consumo_medio_crianca_g,
-      id,
+      consumo_medio_crianca_g
     } = req.body;
-    if (urlID !== id)
-      return res.status(400).json({ error: "ids não correspondem" });
-    if (!(titulo && conteudo && lista && id)) return res.sendStatus(400);
+    if (!(nome && tipo && preco_kg && consumo_medio_adulto_g && consumo_medio_crianca_g)) return res.sendStatus(400);
     console.info(`${dateTime} - carne ${urlID} - ${carne.nome} - Alterar`);
   } else if (req.method === "DELETE") {
     console.info(`${dateTime} - carne ${urlID} - ${carne.nome} - Remover`);
@@ -162,15 +161,17 @@ app.get("/carnes/:id", (req, res) => {
 });
 
 app.put("/carnes/:id", (req, res) => {
+  console.info(req.body);
   const {
     nome,
     tipo,
     preco_kg,
     consumo_medio_adulto_g,
-    consumo_medio_crianca_g,
-    id,
+    consumo_medio_crianca_g
   } = req.body;
-  const carne = carnes.find((x) => x.id === id);
+  const id = req.params.id;
+  console.info('id', id);
+  const carne = carnes.find((x) => x.id == id);
   carne.nome = nome;
   carne.tipo = tipo;
   carne.preco_kg = preco_kg;
@@ -241,12 +242,9 @@ const validateAndLogAlterationOrDeletionBebida = (req, res, next) => {
       tipo,
       preco_unidade,
       consumo_medio_adulto_ml,
-      consumo_medio_crianca_ml,
-      id,
+      consumo_medio_crianca_ml
     } = req.body;
-    if (urlID !== id)
-      return res.status(400).json({ error: "ids não correspondem" });
-    if (!(titulo && conteudo && lista && id)) return res.sendStatus(400);
+    if (!(nome && tipo && preco_unidade && consumo_medio_adulto_ml && consumo_medio_crianca_ml)) return res.sendStatus(400);
     console.info(`${dateTime} - bebida ${urlID} - ${bebida.nome} - Alterar`);
   } else if (req.method === "DELETE") {
     console.info(`${dateTime} - bebida ${urlID} - ${bebida.nome} - Remover`);
@@ -266,15 +264,16 @@ app.get("/bebidas/:id", (req, res) => {
 });
 
 app.put("/bebidas/:id", (req, res) => {
+  console.info(req.body);
   const {
     nome,
     tipo,
     preco_unidade,
     consumo_medio_adulto_ml,
     consumo_medio_crianca_ml,
-    id,
   } = req.body;
-  const bebida = bebidas.find((x) => x.id === id);
+  const id = req.params.id;
+  const bebida = bebidas.find((x) => x.id == id);
   bebida.nome = nome;
   bebida.tipo = tipo;
   bebida.preco_unidade = preco_unidade;

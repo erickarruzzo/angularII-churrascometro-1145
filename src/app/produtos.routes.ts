@@ -1,6 +1,11 @@
 import { Routes } from '@angular/router';
 
 export const produtosRoutes: Routes = [
+  { 
+    path: '',
+    redirectTo: 'carnes',
+    pathMatch: 'full' 
+  },
   {
     path: ':produto',
     loadComponent: () => import('./pages/criacao-produto/criacao-produto.component'),

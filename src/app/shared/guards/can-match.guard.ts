@@ -5,11 +5,11 @@ import { LoginService } from '../services/login.service';
 export const canMatchGuard: CanMatchFn = (route, segments) => {
   const serviceLogin = inject(LoginService);
 
-  if (!serviceLogin.isLoggedIn()) {
-    console.log('Acesso negado');
-    return false;
+  if (serviceLogin.isAdmin()) {
+    console.log('Acesso permitido');
+    return true;
   }
-  
-  console.log('Acesso permitido');
-  return true;
+
+  console.log('Acesso negado');
+  return false;
 };
