@@ -54,6 +54,7 @@ export class PrecoFormularioComponent implements OnInit {
   bebidasLista: { value: string; label: string }[] = [];
 
   tiposChurrasco = Object.values(TipoChurrasco);
+  tiposChurrascoEnum = TipoChurrasco;
   tipoChurrascoSelecionado!: string;
 
   adultos_total = 0;
@@ -212,6 +213,9 @@ export class PrecoFormularioComponent implements OnInit {
   }
 
   carregaTipoChurrasco() {
+    this.formCarnes.reset();
+    this.formBebidas.reset();
+    this.formPessoas.reset();
     this.tipoChurrascoSelecionado =
       this.formTipoChurrasco.get('tipoChurrasco')?.value;
   }

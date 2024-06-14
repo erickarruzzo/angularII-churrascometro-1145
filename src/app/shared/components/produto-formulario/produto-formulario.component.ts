@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router, RouterLink } from '@angular/router';
 import { MatSelectModule } from '@angular/material/select';
+import { TipoChurrasco } from '../../models/enums/tipoChurrasco.enum';
 
 @Component({
   selector: 'app-produto-formulario',
@@ -38,8 +39,7 @@ export class ProdutoFormularioComponent implements OnInit {
 
   form!: FormGroup;
 
-  listTipoChurrasco: string[] = ['Normal', 'Vegetariano', 'Vegano'];
-  // getProduto = this.servico.getProduto;
+  listTipoChurrasco: string[] = Object.values(TipoChurrasco);
 
   constructor(
     private formBuilder: FormBuilder,

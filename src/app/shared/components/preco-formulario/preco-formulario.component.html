@@ -98,20 +98,20 @@
 
         @for (carne of carnesLista; track $index) {
           @switch(tipoChurrascoSelecionado) { 
-            @case("Normal") {
+            @case(tiposChurrascoEnum.normal) {
               <mat-checkbox [formControlName]="carne.value">
                 {{ carne.label }}
               </mat-checkbox>
             }
-            @case("Vegetariano") {
-              @if (carne.tipo === "Vegetariano" || carne.tipo === "Vegano") {
+            @case(tiposChurrascoEnum.vegetariano) {
+              @if (carne.tipo === tiposChurrascoEnum.vegetariano || carne.tipo === tiposChurrascoEnum.vegano) {
                 <mat-checkbox [formControlName]="carne.value">
                   {{ carne.label }}
                 </mat-checkbox>   
               }
             }
-            @case("Vegano") {
-              @if (carne.tipo === "Vegano") {
+            @case(tiposChurrascoEnum.vegano) {
+              @if (carne.tipo === tiposChurrascoEnum.vegano) {
                 <mat-checkbox [formControlName]="carne.value">
                   {{ carne.label }}
                 </mat-checkbox>   
