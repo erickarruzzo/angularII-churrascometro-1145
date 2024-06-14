@@ -1,10 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { PERFIL_KEY, TOKEN_KEY, USER_KEY } from '../models/constants/constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StorageService {
+
+  public usuario = signal<string | null>(null);
+
 
   constructor() { }
 
@@ -29,10 +32,12 @@ export class StorageService {
   }
 
   private setUser(user: string): void {
+    this.usuario.set(user);
     window.sessionStorage.setItem(USER_KEY, user);
   }
 
   private removeUser(): void {
+    this.usuario.set(null);
     window.sessionStorage.removeItem(USER_KEY);
   }
 
