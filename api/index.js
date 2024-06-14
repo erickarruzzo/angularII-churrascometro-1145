@@ -63,7 +63,12 @@ const jwtValidation = (req, res, next) => {
     } else throw new Error("token not found");
   } catch (err) {
     console.info("JWT Middleware - error validating token\n" + err);
-    res.sendStatus(401);
+
+    if(err.message === "jwt expired") {
+      res.sendStatus(403);
+    } else {
+      res.sendStatus(401);
+    }
     return res.end();
   }
   next();

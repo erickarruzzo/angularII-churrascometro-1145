@@ -47,7 +47,7 @@ export class ProdutoFormularioComponent implements OnInit {
     private route: Router
   ) {
     effect(() => {
-      if (this.servico.getProduto()) {
+      if (this.servico.getProduto() && this.idRoute) {
         this.form.patchValue(this.servico.getProduto());
       }
     });
@@ -118,6 +118,7 @@ export class ProdutoFormularioComponent implements OnInit {
         this.servico.httpCreateProduto(produto, this.produtoRoute).subscribe({
           next: (retorno) => {
             console.log(retorno);
+            this.form.reset();
             this.route.navigate(['/produtos']);
           },
           error: (error) => console.error(error),
@@ -135,6 +136,7 @@ export class ProdutoFormularioComponent implements OnInit {
           .subscribe({
             next: (retorno: any) => {
               console.log('Editado', retorno);
+              this.form.reset();
               this.route.navigate(['/produtos']);
             },
             error: (error) => console.error(error),
