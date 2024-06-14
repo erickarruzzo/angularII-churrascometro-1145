@@ -10,7 +10,7 @@
         } @else {
           <input type="text" matInput [(ngModel)]="user" placeholder="Usuário" />
           <input type="password" matInput [(ngModel)]="pass" placeholder="Senha" />
-          <a mat-menu-item (click)="login()">Entrar</a>
+          <button mat-menu-item (click)="login()">Entrar</button>
         }
       </mat-menu>
     </menu>
@@ -20,7 +20,7 @@
       } @else {
         <input class="mr-2" type="text" matInput color="primary" [(ngModel)]="user" placeholder="Usuário" />
         <input class="mr-2" type="password" matInput color="primary" [(ngModel)]="pass" placeholder="Senha" />
-        <a mat-menu-item (click)="login()">Entrar</a>
+        <button mat-menu-item (click)="login()">Entrar</button>
       }
     </menu>
     <figure routerLink="/home" class="flex items-center gap-4 md:flex-row-reverse cursor-pointer">

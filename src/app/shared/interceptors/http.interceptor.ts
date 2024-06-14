@@ -19,6 +19,7 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     retry({ count: 2, delay: 1000 }),
     catchError((err: HttpErrorResponse) => {
+      if (err.status === 403) storageService.doLogout();
       router.navigate(['/erro', err.status], {
         queryParams: { mensagem: err.message },
       });

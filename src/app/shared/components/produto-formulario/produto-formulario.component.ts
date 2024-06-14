@@ -6,6 +6,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
+import { TipoChurrasco } from '../../models/enums/tipoChurrasco.enum';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-produto-formulario',
@@ -17,6 +19,7 @@ import { Router } from '@angular/router';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatSelectModule
   ],
   templateUrl: './produto-formulario.component.html',
   styleUrl: './produto-formulario.component.scss'
@@ -28,6 +31,8 @@ export class ProdutoFormularioComponent implements OnInit {
   campos!: any[];
 
   form!: FormGroup;
+
+  listaTipoChurrasco: string[] = Object.values(TipoChurrasco);
   // getProduto = this.servico.getProduto;
 
   constructor(
@@ -36,7 +41,7 @@ export class ProdutoFormularioComponent implements OnInit {
     private route: Router
   ) {
     effect(() => {
-      if (this.servico.getProduto()) {
+      if (this.servico.getProduto() && this.idRoute) {
         this.form.patchValue(this.servico.getProduto());
       }
     })
@@ -50,7 +55,7 @@ export class ProdutoFormularioComponent implements OnInit {
       case 'carnes':
         this.campos = [
           { nome: 'nome', tipo: 'text', placeholder: 'Nome' },
-          { nome: 'tipo', tipo: 'text', placeholder: 'Tipo' },
+          { nome: 'tipo', tipo: 'list', placeholder: 'Tipo' },
           { nome: 'preco_kg', tipo: 'number', placeholder: 'Preço por kg' },
           { nome: 'consumo_medio_adulto_g', tipo: 'number', placeholder: 'Consumo médio por adulto (g)' },
           { nome: 'consumo_medio_crianca_g', tipo: 'number', placeholder: 'Consumo médio por criança (g)' },
@@ -59,7 +64,7 @@ export class ProdutoFormularioComponent implements OnInit {
       case 'bebidas':
         this.campos = [
           { nome: 'nome', tipo: 'text', placeholder: 'Nome' },
-          { nome: 'tipo', tipo: 'text', placeholder: 'Tipo' },
+          { nome: 'tipo', tipo: 'list', placeholder: 'Tipo' },
           { nome: 'preco_unidade', tipo: 'number', placeholder: 'Preço por unidade' },
           { nome: 'consumo_medio_adulto_ml', tipo: 'number', placeholder: 'Consumo médio por adulto (ml)' },
           { nome: 'consumo_medio_crianca_ml', tipo: 'number', placeholder: 'Consumo médio por criança (ml)' },
@@ -103,6 +108,7 @@ export class ProdutoFormularioComponent implements OnInit {
         this.servico.httpUpdateProduto(this.idRoute, this.produtoRoute, produto).subscribe({
           next: (retorno: any) => {
             console.log('Editado', retorno);
+            this.form.reset();
             this.route.navigate(['/home']);
           },
           error: (error) => console.error(error),
@@ -134,7 +140,7 @@ export class ProdutoFormularioComponent implements OnInit {
       if (value) {
         produto = {
           ...produto, 
-          [campo.nome]: campo.tipo === "number" ? parseInt(value) : value // tipo: Fruta
+          [campo.nome]: campo.tipo === "number" ? parseFloat(value) : value // tipo: Fruta
         }
       }
       
