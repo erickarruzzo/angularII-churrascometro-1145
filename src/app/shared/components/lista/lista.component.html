@@ -1,7 +1,7 @@
 <div class="table-container">
     <div class="flex justify-between items-center">
         <h1 class="inline-flex text-2xl font-bold mb-4">Lista de {{ produto | titlecase }}</h1>
-        <a mat-flat-button color="primary" (click)="navegarParaCriacao()" matTooltip="Adicionar novo produto" class="inline-flex mb-4">+</a>
+        <a mat-flat-button color="primary" (click)="navegarParaCriacao()" [matTooltip]="'Adicionar nova ' + produto.substring(0, produto.length - 1)" class="inline-flex mb-4">+</a>
     </div>
     @if(items.length > 0) {
         <table>

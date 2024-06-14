@@ -101,7 +101,6 @@ export class ProdutoFormularioComponent implements OnInit {
     });
 
     if (this.idRoute) {
-      console.log('ID', this.idRoute);
       this.servico.httpGetProduto(this.idRoute, this.produtoRoute).subscribe();
     }
   }

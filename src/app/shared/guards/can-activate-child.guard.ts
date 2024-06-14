@@ -7,10 +7,8 @@ export const canActivateChildGuard: CanActivateChildFn = (childRoute, state) => 
   const router = inject(Router);
 
   if (loginService.isLoggedIn()) {
-    console.log('Acesso concedido')
     return true;
   }
-  console.log('Acesso negado')
   router.navigate(['/home']);
   return false;
 };

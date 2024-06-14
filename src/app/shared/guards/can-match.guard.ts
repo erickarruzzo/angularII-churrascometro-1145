@@ -6,10 +6,8 @@ export const canMatchGuard: CanMatchFn = (route, segments) => {
   const serviceLogin = inject(LoginService);
 
   if (serviceLogin.isAdmin()) {
-    console.log('Acesso permitido');
     return true;
   }
 
-  console.log('Acesso negado');
   return false;
 };
