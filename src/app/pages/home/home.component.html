@@ -2,8 +2,9 @@
   <div class="text-center">
     <h1 class="my-6 text-3xl font-bold">{{ welcomeMessage }}</h1>
 
-    <button mat-raised-button color="primary" class="button-start mb-6" routerLink="../churrascos/novo">
-      Vamos começar!
-    </button>
+    <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+      <mat-button-toggle value="bold" routerLink="../churrascos/novo">Novo Churrasco</mat-button-toggle>
+      <mat-button-toggle value="bold" routerLink="../produtos">Produtos</mat-button-toggle>
+    </mat-button-toggle-group>
   </div>
 </section>

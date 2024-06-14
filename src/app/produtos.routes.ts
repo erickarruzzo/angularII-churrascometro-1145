@@ -3,8 +3,8 @@ import { Routes } from '@angular/router';
 export const produtosRoutes: Routes = [
   { 
     path: '',
-    redirectTo: 'carnes',
-    pathMatch: 'full' 
+    loadComponent: () => import('./pages/lista-produto/lista-produto.component'),
+    title: 'Churrascometro - Lista de Produtos'
   },
   {
     path: ':produto',

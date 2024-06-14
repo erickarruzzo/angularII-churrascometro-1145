@@ -241,10 +241,9 @@ const validateAndLogAlterationOrDeletionBebida = (req, res, next) => {
       nome,
       tipo,
       preco_unidade,
-      consumo_medio_adulto_ml,
-      consumo_medio_crianca_ml
+      consumo_medio_adulto_ml
     } = req.body;
-    if (!(nome && tipo && preco_unidade && consumo_medio_adulto_ml && consumo_medio_crianca_ml)) return res.sendStatus(400);
+    if (!(nome && tipo && preco_unidade && consumo_medio_adulto_ml)) return res.sendStatus(400);
     console.info(`${dateTime} - bebida ${urlID} - ${bebida.nome} - Alterar`);
   } else if (req.method === "DELETE") {
     console.info(`${dateTime} - bebida ${urlID} - ${bebida.nome} - Remover`);
@@ -278,7 +277,7 @@ app.put("/bebidas/:id", (req, res) => {
   bebida.tipo = tipo;
   bebida.preco_unidade = preco_unidade;
   bebida.consumo_medio_adulto_ml = consumo_medio_adulto_ml;
-  bebida.consumo_medio_crianca_ml = consumo_medio_crianca_ml;
+  bebida.consumo_medio_crianca_ml = consumo_medio_crianca_ml ? consumo_medio_crianca_ml : 0;
   return res.status(200).json(bebida);
 });
 

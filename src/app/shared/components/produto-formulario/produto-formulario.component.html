@@ -7,14 +7,24 @@
         }
     </h2>
     @for (campo of campos; track campo.nome) {
-        <mat-form-field>
-            <input
-              matInput
-              [type]="campo.tipo"
-              [formControlName]="campo.nome"
-              [placeholder]="campo.placeholder"
-            />
-        </mat-form-field>
+        @if (campo.tipo === 'list') {
+            <mat-form-field>
+                <mat-select [formControlName]="campo.nome" [placeholder]="campo.placeholder">
+                    @for (item of listTipoChurrasco; track item) {
+                        <mat-option [value]="item">{{ item }}</mat-option>    
+                    }
+                </mat-select>
+            </mat-form-field>
+        } @else {
+            <mat-form-field>
+                <input
+                  matInput
+                  [type]="campo.tipo"
+                  [formControlName]="campo.nome"
+                  [placeholder]="campo.placeholder"
+                />
+            </mat-form-field>
+        }
     }
     <button mat-raised-button color="primary" class="button-start mb-6" [disabled]="!form.valid" (click)="idRoute ? editar() : criar()">
         @if (idRoute) {
@@ -26,4 +36,5 @@
     @if (idRoute) {
         <button mat-raised-button color="warn" class="button-start mb-6" (click)="deletar()">Apagar</button>
     }
+    <button mat-raised-button class="button-start mb-6" [routerLink]="['/produtos']">Voltar</button>
 </form>

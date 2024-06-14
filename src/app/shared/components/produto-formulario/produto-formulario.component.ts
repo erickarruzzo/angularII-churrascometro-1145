@@ -1,11 +1,18 @@
 import { Component, Input, OnInit, effect } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { ChurrascometroService } from '../../services/churrascometro.service';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-produto-formulario',
@@ -17,9 +24,11 @@ import { Router } from '@angular/router';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    RouterLink,
+    MatSelectModule
   ],
   templateUrl: './produto-formulario.component.html',
-  styleUrl: './produto-formulario.component.scss'
+  styleUrl: './produto-formulario.component.scss',
 })
 export class ProdutoFormularioComponent implements OnInit {
   @Input() idRoute!: string;
@@ -28,6 +37,8 @@ export class ProdutoFormularioComponent implements OnInit {
   campos!: any[];
 
   form!: FormGroup;
+
+  listTipoChurrasco: string[] = ['Normal', 'Vegetariano', 'Vegano'];
   // getProduto = this.servico.getProduto;
 
   constructor(
@@ -39,35 +50,54 @@ export class ProdutoFormularioComponent implements OnInit {
       if (this.servico.getProduto()) {
         this.form.patchValue(this.servico.getProduto());
       }
-    })
+    });
   }
-
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({});
 
-    switch(this.produtoRoute) {
+    switch (this.produtoRoute) {
       case 'carnes':
         this.campos = [
           { nome: 'nome', tipo: 'text', placeholder: 'Nome' },
-          { nome: 'tipo', tipo: 'text', placeholder: 'Tipo' },
+          { nome: 'tipo', tipo: 'list', placeholder: 'Tipo' },
           { nome: 'preco_kg', tipo: 'number', placeholder: 'Preço por kg' },
-          { nome: 'consumo_medio_adulto_g', tipo: 'number', placeholder: 'Consumo médio por adulto (g)' },
-          { nome: 'consumo_medio_crianca_g', tipo: 'number', placeholder: 'Consumo médio por criança (g)' },
+          {
+            nome: 'consumo_medio_adulto_g',
+            tipo: 'number',
+            placeholder: 'Consumo médio por adulto (g)',
+          },
+          {
+            nome: 'consumo_medio_crianca_g',
+            tipo: 'number',
+            placeholder: 'Consumo médio por criança (g)',
+          },
         ];
         break;
       case 'bebidas':
         this.campos = [
           { nome: 'nome', tipo: 'text', placeholder: 'Nome' },
           { nome: 'tipo', tipo: 'text', placeholder: 'Tipo' },
-          { nome: 'preco_unidade', tipo: 'number', placeholder: 'Preço por unidade' },
-          { nome: 'consumo_medio_adulto_ml', tipo: 'number', placeholder: 'Consumo médio por adulto (ml)' },
-          { nome: 'consumo_medio_crianca_ml', tipo: 'number', placeholder: 'Consumo médio por criança (ml)' },
+          {
+            nome: 'preco_unidade',
+            tipo: 'number',
+            placeholder: 'Preço por unidade',
+          },
+          {
+            nome: 'consumo_medio_adulto_ml',
+            tipo: 'number',
+            placeholder: 'Consumo médio por adulto (ml)',
+          },
+          {
+            nome: 'consumo_medio_crianca_ml',
+            tipo: 'number',
+            placeholder: 'Consumo médio por criança (ml)',
+          },
         ];
     }
 
     this.campos.forEach((campo) => {
-      this.addFormControl(campo.nome, [Validators.required])
+      this.addFormControl(campo.nome, [Validators.required]);
     });
 
     if (this.idRoute) {
@@ -87,11 +117,11 @@ export class ProdutoFormularioComponent implements OnInit {
       if (produto) {
         this.servico.httpCreateProduto(produto, this.produtoRoute).subscribe({
           next: (retorno) => {
-            this.form.reset();
             console.log(retorno);
+            this.route.navigate(['/produtos']);
           },
           error: (error) => console.error(error),
-        })
+        });
       }
     }
   }
@@ -100,27 +130,32 @@ export class ProdutoFormularioComponent implements OnInit {
     if (this.form.valid) {
       const produto = this.getProduto();
       if (produto) {
-        this.servico.httpUpdateProduto(this.idRoute, this.produtoRoute, produto).subscribe({
-          next: (retorno: any) => {
-            console.log('Editado', retorno);
-            this.route.navigate(['/home']);
-          },
-          error: (error) => console.error(error),
-        });
+        this.servico
+          .httpUpdateProduto(this.idRoute, this.produtoRoute, produto)
+          .subscribe({
+            next: (retorno: any) => {
+              console.log('Editado', retorno);
+              this.route.navigate(['/produtos']);
+            },
+            error: (error) => console.error(error),
+          });
       }
     }
   }
 
   deletar() {
     if (this.idRoute) {
-      this.servico.httpDeleteProduto(this.idRoute, this.produtoRoute).subscribe({
-        next: () => {
-          console.log('Apagado');
-          this.form.reset();
-          this.route.navigate(['/home']);
-          alert('Apagado');
-        }, error: (error) => console.error(error)
-      });
+      this.servico
+        .httpDeleteProduto(this.idRoute, this.produtoRoute)
+        .subscribe({
+          next: () => {
+            console.log('Apagado');
+            this.form.reset();
+            this.route.navigate(['/home']);
+            alert('Apagado');
+          },
+          error: (error) => console.error(error),
+        });
     }
   }
 
@@ -133,12 +168,11 @@ export class ProdutoFormularioComponent implements OnInit {
 
       if (value) {
         produto = {
-          ...produto, 
-          [campo.nome]: campo.tipo === "number" ? parseInt(value) : value // tipo: Fruta
-        }
+          ...produto,
+          [campo.nome]: campo.tipo === 'number' ? parseFloat(value) : value, // tipo: Fruta
+        };
       }
-      
-    })
+    });
 
     return produto;
   }

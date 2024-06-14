@@ -20,6 +20,4 @@ export default class CriacaoProdutoComponent {
   @Input() set produto(produto: string) {
     this.paramProduto = produto;
   }
-
-
 }
