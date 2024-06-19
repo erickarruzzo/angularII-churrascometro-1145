@@ -1,6 +1,5 @@
-import { Component, OnInit, computed, effect, signal } from '@angular/core';
+import { Component, OnInit, effect } from '@angular/core';
 import { ChurrascometroService } from '../../services/churrascometro.service';
-import { map } from 'rxjs';
 import { CommonModule, TitleCasePipe } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';

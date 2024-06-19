@@ -33,7 +33,8 @@ export class ChurrascometroService {
   }
 
   httpGetBebidas(): Observable<Bebidas[]> {
-    return this.http.get<Bebidas[]>(`${API_URL}/bebidas`).pipe(
+    return this.http.get<Bebidas[]>(`${API_URL}/bebidas`).
+    pipe(
       tap((bebidas) => {
         this.bebidas.set(bebidas);
       }),

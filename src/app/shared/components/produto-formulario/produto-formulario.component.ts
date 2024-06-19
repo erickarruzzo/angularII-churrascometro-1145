@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, effect } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, effect } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChurrascometroService } from '../../services/churrascometro.service';
 import { CommonModule } from '@angular/common';
@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
 import { TipoChurrasco } from '../../models/enums/tipoChurrasco.enum';
 import { MatSelectModule } from '@angular/material/select';
+import { TipoBebida } from '../../models/enums/tipoBebida.enum';
 
 @Component({
   selector: 'app-produto-formulario',
@@ -33,6 +34,8 @@ export class ProdutoFormularioComponent implements OnInit {
   form!: FormGroup;
 
   listaTipoChurrasco: string[] = Object.values(TipoChurrasco);
+  listaTipoBebida: string[] = Object.values(TipoBebida);
+  
   // getProduto = this.servico.getProduto;
 
   constructor(
@@ -43,6 +46,7 @@ export class ProdutoFormularioComponent implements OnInit {
     effect(() => {
       if (this.servico.getProduto() && this.idRoute) {
         this.form.patchValue(this.servico.getProduto());
+        this.disableCrianca();
       }
     })
   }
@@ -78,6 +82,17 @@ export class ProdutoFormularioComponent implements OnInit {
     if (this.idRoute) {
       console.log('ID', this.idRoute);
       this.servico.httpGetProduto(this.idRoute, this.produtoRoute).subscribe();
+    }
+  }
+
+  disableCrianca(): void {
+    console.log(this.form.get('tipo')?.value);
+    if (this.form.get('tipo')?.value == TipoBebida.alcoolico) {
+      this.form.get('consumo_medio_crianca_ml')?.disable();
+      this.form.get('consumo_medio_crianca_ml')?.setValue(0);
+    } else {
+      this.form.get('consumo_medio_crianca_ml')?.enable();
+      this.form.get('consumo_medio_crianca_ml')?.setValue('');
     }
   }
 
